@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+    <form method="post" th:action="@{/add}">
+
+    <input type="text" name="sugar" placeholder="Введите сахар">
+        <input type="text" name="date" placeholder="Дата">
+        <input type="text" name="time" placeholder="Время">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<div>Список измерений сахаров у больного </div>
+<table>
+    <thead>
+    <tr>
+        <th> Sugar </th>
+        <th> Data </th>
+        <th> Time </th>
+        <th> ID </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${sugars.empty}">
+        <td colspan="2"> У вас нет сахаров </td>
+    </tr>
+    <tr th:each="sugar : ${sugars}">
+        <td><span th:text="${sugar.sugar}"> Sugar </span></td>
+        <td><span th:text="${sugar.data}"> Data </span></td>
+        <td><span th:text="${sugar.time}"> Time </span></td>
+        <td><span th:text="${sugar.id}"> ID </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
