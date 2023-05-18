@@ -5,9 +5,12 @@
     <title>Title</title>
 </head>
 <body>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 
 <div>
-    <form method="post" th:action="@{/add}">
+    <form method="post" th:action="@{/main}">
 
     <input type="text" name="sugar" placeholder="Введите сахар">
         <input type="text" name="date" placeholder="Дата">
@@ -34,6 +37,7 @@
         <td><span th:text="${sugar.data}"> Data </span></td>
         <td><span th:text="${sugar.time}"> Time </span></td>
         <td><span th:text="${sugar.id}"> ID </span></td>
+        <td><span th:text="${sugar.patientName}"> name </span></td>
     </tr>
     </tbody>
 </table>

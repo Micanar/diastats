@@ -1,10 +1,8 @@
 package com.micana.diastats.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import javax.persistence.*;
+
 
 @Entity
 public class Blood_sugar {
@@ -15,16 +13,24 @@ public class Blood_sugar {
     private String sugar;
     private String data;
     private String time;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User patient;
+
 
     public Blood_sugar() {
     }
 
-    public Blood_sugar(String sugar, String data, String time) {
+    public Blood_sugar(String sugar, String data, String time,User user) {
+        this.patient = user;
         this.sugar = sugar;
         this.data = data;
         this.time = time;
     }
 
+    public String getPatientName(){
+        return patient!=null ? patient.getUsername() : "<none>";
+    }
     public Integer getId() {
         return id;
     }
