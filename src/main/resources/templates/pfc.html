@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PFC</title>
+</head>
+<body>
+<h1>Add PFC</h1>
+<form action="/add-pfc" method="post">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required>
+  <br>
+  <label for="proteins">Proteins:</label>
+  <input type="number" id="proteins" name="proteins" step="0.01" required>
+  <br>
+  <label for="fats">Fats:</label>
+  <input type="number" id="fats" name="fats" step="0.01" required>
+  <br>
+  <label for="carbohydrates">Carbohydrates:</label>
+  <input type="number" id="carbohydrates" name="carbohydrates" step="0.01" required>
+  <br>
+  <button type="submit">Add</button>
+</form>
+
+<h1>PFC List</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Proteins</th>
+    <th>Fats</th>
+    <th>Carbohydrates</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="pfc : ${pfcList}">
+    <td th:text="${pfc.id}">ID</td>
+    <td th:text="${pfc.name}">Name</td>
+    <td th:text="${pfc.proteins}">Proteins</td>
+    <td th:text="${pfc.fats}">Fats</td>
+    <td th:text="${pfc.carbohydrates}">Carbohydrates</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -2,6 +2,9 @@ package com.micana.diastats.domain;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 
 
 @Entity
@@ -10,9 +13,11 @@ public class Blood_sugar {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    private String sugar;
-    private String data;
-    private String time;
+    private double sugar;
+
+    private LocalDate data;
+
+    private LocalTime time;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User patient;
@@ -21,12 +26,14 @@ public class Blood_sugar {
     public Blood_sugar() {
     }
 
-    public Blood_sugar(String sugar, String data, String time,User user) {
+    public Blood_sugar(double sugar, LocalDate data, LocalTime time,User user) {
         this.patient = user;
         this.sugar = sugar;
         this.data = data;
         this.time = time;
     }
+
+
 
     public String getPatientName(){
         return patient!=null ? patient.getUsername() : "<none>";
@@ -39,27 +46,27 @@ public class Blood_sugar {
         this.id = id;
     }
 
-    public String getSugar() {
+    public double getSugar() {
         return sugar;
     }
 
-    public void setSugar(String sugar) {
+    public void setSugar(double sugar) {
         this.sugar = sugar;
     }
 
-    public String getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 }

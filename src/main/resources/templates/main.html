@@ -8,13 +8,15 @@
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>
-
+<div th:if="${errorMessage}" class="error-message">
+    <span th:text="${errorMessage}"></span>
+</div>
 <div>
     <form method="post" th:action="@{/main}">
 
     <input type="text" name="sugar" placeholder="Введите сахар">
-        <input type="text" name="date" placeholder="Дата">
-        <input type="text" name="time" placeholder="Время">
+        <input type="date" name="date" placeholder="Дата">
+        <input type="time" name="time" placeholder="Время">
         <button type="submit">Добавить</button>
     </form>
 </div>
@@ -29,7 +31,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${sugars.empty}">
+    <tr th:if="${sugars != null and  sugars.empty}">
         <td colspan="2"> У вас нет сахаров </td>
     </tr>
     <tr th:each="sugar : ${sugars}">
