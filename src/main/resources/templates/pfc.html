@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Add PFC</h1>
-<form action="/add-pfc" method="post">
+<form method="post" th:action="@{/pfc/add}">
   <label for="name">Name:</label>
   <input type="text" id="name" name="name" required>
   <br>

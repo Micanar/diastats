@@ -20,8 +20,7 @@ public class PFC {
     public PFC() {
     }
 
-    public PFC(Integer id, String name, double proteins, double fats, double carbohydrates) {
-        this.id = id;
+    public PFC(String name, double proteins, double fats, double carbohydrates) {
         this.name = name;
         this.proteins = proteins;
         this.fats = fats;
