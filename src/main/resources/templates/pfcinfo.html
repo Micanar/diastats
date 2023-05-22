@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PFC Info</title>
+</head>
+<body>
+<h1>PFC Info</h1>
+<form method="post" th:action="@{/calculate}">
+  <label for="name">Product:</label>
+  <input type="text" id="name" name="name">
+  <br>
+  <label for="grams">Grams:</label>
+  <input type="text" id="grams" name="grams">
+  <br>
+  <button type="submit">Calculate</button>
+</form>
+<h2>Results:</h2>
+<div>
+  <strong>Product:</strong> <span th:text="${name}"></span>
+</div>
+<div>
+  <strong>Grams:</strong> <span th:text="${grams}"></span>
+</div>
+<div>
+  <strong>Proteins:</strong> <span th:text="${proteins}"></span>
+</div>
+<div>
+  <strong>Fats:</strong> <span th:text="${fats}"></span>
+</div>
+<div>
+  <strong>Carbohydrates:</strong> <span th:text="${carbohydrates}"></span>
+</div>
+<div th:text="${error}" style="color: red;"></div>
+</body>
+</html>
