@@ -1,7 +1,11 @@
 package com.micana.diastats.domain;
 
+import com.micana.diastats.domain.PFC;
+import com.micana.diastats.domain.User;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 public class ProductConsumption {
@@ -14,7 +18,9 @@ public class ProductConsumption {
 
     private double grams;
 
-    private LocalDateTime consumptionDateTime;
+    private LocalDate consumptionDate;
+
+    private LocalTime consumptionTime;
 
     @ManyToOne
     private User user;
@@ -22,13 +28,13 @@ public class ProductConsumption {
     public ProductConsumption() {
     }
 
-    public ProductConsumption(PFC product, double grams, LocalDateTime consumptionDateTime, User user) {
+    public ProductConsumption(PFC product, double grams, LocalDate consumptionDate, LocalTime consumptionTime, User user) {
         this.product = product;
         this.grams = grams;
-        this.consumptionDateTime = consumptionDateTime;
+        this.consumptionDate = consumptionDate;
+        this.consumptionTime = consumptionTime;
         this.user = user;
     }
-
     public Integer getId() {
         return id;
     }
@@ -53,12 +59,20 @@ public class ProductConsumption {
         this.grams = grams;
     }
 
-    public LocalDateTime getConsumptionDateTime() {
-        return consumptionDateTime;
+    public LocalDate getConsumptionDate() {
+        return consumptionDate;
     }
 
-    public void setConsumptionDateTime(LocalDateTime consumptionDateTime) {
-        this.consumptionDateTime = consumptionDateTime;
+    public void setConsumptionDate(LocalDate consumptionDate) {
+        this.consumptionDate = consumptionDate;
+    }
+
+    public LocalTime getConsumptionTime() {
+        return consumptionTime;
+    }
+
+    public void setConsumptionTime(LocalTime consumptionTime) {
+        this.consumptionTime = consumptionTime;
     }
 
     public User getUser() {

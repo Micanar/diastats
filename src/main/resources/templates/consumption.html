@@ -1,54 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Product Consumption</title>
 </head>
 <body>
-<h1>Add Product Consumption</h1>
-<form method="post" th:action="@{/consumption}">
+<h1>Product Consumption</h1>
+
+<form th:action="@{/consumption}" method="post">
     <div>
         <label for="name">Product Name:</label>
-        <input type="text" id="name" name="name" required>
+        <select id="name" name="name" th:options="${pfcList}" th:value="${pfc.name}" required>
+            <option value="">Select a product</option>
+        </select>
     </div>
     <div>
         <label for="grams">Grams:</label>
         <input type="number" id="grams" name="grams" required>
     </div>
     <div>
-        <label for="dateTime">Date and Time:</label>
-        <input type="datetime-local" id="dateTime" name="dateTime" required>
+        <label for="consumptionDate">Date:</label>
+        <input type="date" id="consumptionDate" name="consumptionDate" required>
+    </div>
+    <div>
+        <label for="consumptionTime">Time:</label>
+        <input type="time" id="consumptionTime" name="consumptionTime" required>
     </div>
     <button type="submit">Add Consumption</button>
 </form>
 
-<hr>
-
-<h1>Product Consumption List</h1>
-<form th:action="@{/consumption}" method="get">
-    <label for="dateFilter">Filter by Date:</label>
-    <input type="date" id="dateFilter" name="date">
-    <button type="submit">Filter</button>
-</form>
-
+<h2>Consumption History</h2>
 <table>
+    <thead>
     <tr>
+        <th>Product</th>
+        <th>Grams</th>
         <th>Date</th>
         <th>Time</th>
-        <th>Product Name</th>
-        <th>Proteins</th>
-        <th>Fats</th>
-        <th>Carbohydrates</th>
     </tr>
-    <!-- Loop through all product consumptions -->
-    <th:block th:each="consumption : ${consumptions}">
-        <tr>
-            <td th:text="${consumption.consumptionDateTime}"></td>
-            <td th:text="${consumption.product.name}"></td>
-            <td th:text="${consumption.product.proteins}"></td>
-            <td th:text="${consumption.product.fats}"></td>
-            <td th:text="${consumption.product.carbohydrates}"></td>
-        </tr>
-    </th:block>
+    </thead>
+    <tbody>
+    <tr th:each="consumption : ${consumptions}">
+        <td th:text="${consumption.product.name}"></td>
+        <td th:text="${consumption.grams}"></td>
+        <td th:text="${consumption.consumptionDate}"></td>
+        <td th:text="${consumption.consumptionTime}"></td>
+    </tr>
+    </tbody>
 </table>
 </body>
 </html>
