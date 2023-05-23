@@ -7,6 +7,7 @@ import com.micana.diastats.repos.PFCRepository;
 import com.micana.diastats.repos.ProductConsumptionRepository;
 import com.micana.diastats.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,26 +17,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Controller
 public class ProductConsumptionController {
 
-    private final ProductConsumptionRepository productConsumptionRepository;
-    private final PFCRepository pfcRepository;
+    @Autowired
+    private PFCRepository pfcRepository;
 
-    public ProductConsumptionController(ProductConsumptionRepository productConsumptionRepository, PFCRepository pfcRepository) {
-        this.productConsumptionRepository = productConsumptionRepository;
-        this.pfcRepository = pfcRepository;
-    }
+    @Autowired
+    private ProductConsumptionRepository productConsumptionRepository;
+
+    @Autowired
+    private UserRepo userRepository;
 
     @GetMapping("/consumption")
-    public String showConsumptionForm(Model model, @AuthenticationPrincipal User user) {
+    public String showConsumptionForm(Model model, @RequestParam(required = false) LocalDate date, @RequestParam(required = false) LocalTime time, @AuthenticationPrincipal User user) {
         Iterable<PFC> pfcList = pfcRepository.findAll();
         model.addAttribute("pfcList", pfcList);
 
-        Iterable<ProductConsumption> consumptions = productConsumptionRepository.findByUserOrderByConsumptionDateAscConsumptionTimeAsc(user);
+        List<ProductConsumption> consumptions;
+        if (date != null && time != null) {
+            consumptions = productConsumptionRepository.findByUserAndConsumptionDateTime(user, date, time, Sort.by(Sort.Direction.DESC, "consumptionDateTime"));
+        } else if (date != null) {
+            consumptions = productConsumptionRepository.findByUserAndConsumptionDate(user, date, Sort.by(Sort.Direction.DESC, "consumptionDate"));
+        } else {
+            consumptions = productConsumptionRepository.findByUser(user, Sort.by(Sort.Direction.DESC, "consumptionDate"));
+        }
         model.addAttribute("consumptions", consumptions);
 
         return "consumption";
@@ -43,14 +52,24 @@ public class ProductConsumptionController {
 
     @PostMapping("/consumption")
     public String addConsumption(@AuthenticationPrincipal User user, @RequestParam String name,
-                                 @RequestParam double grams, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate consumptionDate,
-                                 @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime consumptionTime) {
+                                 @RequestParam double grams, @RequestParam("consumptionDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                 @RequestParam("consumptionTime") @DateTimeFormat(pattern = "HH:mm") LocalTime time) {
         PFC pfc = pfcRepository.findByName(name);
         if (pfc != null) {
-            pfc.setProteins(pfc.getProteins() * grams);
-            pfc.setCarbohydrates(pfc.getCarbohydrates() * grams);
-            pfc.setFats(pfc.getFats() * grams);
-            ProductConsumption consumption = new ProductConsumption(pfc, grams, consumptionDate, consumptionTime, user);
+            double proteins = pfc.getProteins() * grams;
+            double fats = pfc.getFats() * grams;
+            double carbohydrates = pfc.getCarbohydrates() * grams;
+            double breadUnits = pfc.getBreadUnits() * grams;
+            breadUnits = Math.round(breadUnits * 100.0) / 100.0;
+
+            // Создаем новый объект ProductConsumption
+            ProductConsumption consumption = new ProductConsumption(pfc, grams, date, time, user);
+            consumption.setProteins(proteins);
+            consumption.setFats(fats);
+            consumption.setCarbohydrates(carbohydrates);
+            consumption.setBreadUnits(breadUnits);
+
+            // Сохраняем объект ProductConsumption в репозитории
             productConsumptionRepository.save(consumption);
         }
         return "redirect:/consumption";

@@ -1,16 +1,21 @@
 package com.micana.diastats.repos;
 
-import com.micana.diastats.domain.Blood_sugar;
 import com.micana.diastats.domain.ProductConsumption;
 import com.micana.diastats.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
-@Repository
-public interface ProductConsumptionRepository extends JpaRepository<ProductConsumption, Integer> {
-    Iterable<ProductConsumption> findByUserOrderByConsumptionDateAscConsumptionTimeAsc(User user);
+public interface    ProductConsumptionRepository extends CrudRepository<ProductConsumption, Integer> {
+    List<ProductConsumption> findByUserAndConsumptionDateTime(User user, LocalDateTime dateTime, Sort sort);
+
+    List<ProductConsumption> findByUserAndConsumptionDateTime(User user, LocalDate date, LocalTime time, Sort sort);
+
+    List<ProductConsumption> findByUserAndConsumptionDate(User user, LocalDate date, Sort sort);
+
+    List<ProductConsumption> findByUser(User user, Sort sort);
 }

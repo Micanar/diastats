@@ -27,11 +27,13 @@ public class PFCInfoController {
             double proteins = pfc.getProteins() * grams;
             double fats = pfc.getFats() * grams;
             double carbohydrates = pfc.getCarbohydrates() * grams;
+            double breadUnits = pfc.getBreadUnits() * grams;
 
             model.addAttribute("name", name);
             model.addAttribute("grams", grams);
             model.addAttribute("proteins", proteins);
             model.addAttribute("fats", fats);
+            model.addAttribute("breadUnits", breadUnits);
             model.addAttribute("carbohydrates", carbohydrates);
             model.addAttribute("error", null);
         } else {
