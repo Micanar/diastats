@@ -28,6 +28,14 @@
             return "pfc";
         }
 
+        @GetMapping("/pfcs")
+        public String showAllPFCs(Model model) {
+            Iterable<PFC> pfcList = pfcRepository.findAll();
+            model.addAttribute("pfcList", pfcList);
+            model.addAttribute("pfc", new PFC());
+            return "pfcs";
+        }
+
         @PostMapping("/add")
         public String addPFC(@AuthenticationPrincipal User user, @RequestParam String name, @RequestParam double proteins, @RequestParam double fats, @RequestParam double carbohydrates) {
             double proteinsInGrams = proteins / 100;

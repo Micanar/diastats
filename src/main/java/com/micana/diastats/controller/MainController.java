@@ -37,6 +37,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(@AuthenticationPrincipal User user, Model model) {
+
         Iterable<Blood_sugar> blood = bloodRepo.findByPatient(user);
         List<Blood_sugar> sortedSugars = StreamSupport.stream(blood.spliterator(), false)
                 .sorted(Comparator.comparing(Blood_sugar::getData).thenComparing(Blood_sugar::getTime).reversed())
@@ -48,7 +49,11 @@ public class MainController {
     @GetMapping("/blood-sugar/chart")
     public String showBloodSugarChart(Model model, @AuthenticationPrincipal User user) {
         Iterable<Blood_sugar> bloodSugars =  bloodRepo.findByPatient(user);
-        model.addAttribute("bloodSugars", bloodSugars);
+        List<Blood_sugar> sortedSugars = StreamSupport.stream(bloodSugars.spliterator(), false)
+                .sorted(Comparator.comparing(Blood_sugar::getData).thenComparing(Blood_sugar::getTime).reversed())
+                .collect(Collectors.toList());
+
+        model.addAttribute("bloodSugars", sortedSugars);
         return "blood-sugar-chart";
     }
 

@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <include src="bootstrap-links.html"></include>
     <title>Product Consumption</title>
+    <div id="script" th:insert="fragments/boots :: sc"></div>
+    <div id="q" th:insert="fragments/boots :: trap"></div>
+    <div id="w" th:insert="fragments/boots :: sc2"></div>
+    <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
 </head>
 <body>
-<h1>Add Product Consumption</h1>
+
+<h1>Добавить приём пищи</h1>
 <form method="post" th:action="@{/consumption}">
-    <label for="name">Product Name:</label>
-    <input type="text" id="name" name="name" required><br><br>
-    <label for="grams">Grams:</label>
-    <input type="number" id="grams" name="grams" required><br><br>
-    <label for="date">Date:</label>
-    <input type="date" id="date" name="consumptionDate" required><br><br>
-    <label for="time">Time:</label>
-    <input type="time" id="time" name="consumptionTime" required><br><br>
-    <button type="submit">Add Consumption</button>
+    <label for="name">Название продукта:</label>
+    <input type="text" id="name" name="name" required class="form-control mt-2" ><br><br>
+    <label for="grams">Граммы:</label>
+    <input type="number" id="grams" name="grams" required class="form-control mt-2" ><br><br>
+    <label for="date">Дата:</label>
+    <input type="date" id="date" name="consumptionDate" required class="form-control mt-2"><br><br>
+    <label for="time">Время:</label>
+    <input type="time" id="time" name="consumptionTime" required class="form-control mt-2"><br><br>
+    <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 
-<h1>Product Consumption History</h1>
-<table>
+<h1>Дневник питания</h1>
+<table class="table">
+    <thead class="thead-dark">
     <tr>
-        <th>Product Name</th>
-        <th>Grams</th>
-        <th>Carbohydrates</th>
-        <th>Bread Units</th>
-        <th>Date</th>
-        <th>Time</th>
+        <th scope="col">Наименование продукта</th>
+        <th scope="col">Граммы</th>
+        <th scope="col">Углеводы</th>
+        <th  scope="col">Хлебные единицы</th>
+        <th  scope="col">Дата</th>
+        <th  scope="col">Время</th>
     </tr>
+    </thead>
     <tr th:each="consumption : ${consumptions}">
         <td th:text="${consumption.product.name}"></td>
         <td th:text="${consumption.grams}"></td>

@@ -1,0 +1,34 @@
+  <!DOCTYPE html>
+  <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>PFCs</title>
+    <!-- Подключение Bootstrap, если требуется -->
+    <div id="script" th:insert="fragments/boots :: sc"></div>
+    <div id="q" th:insert="fragments/boots :: trap"></div>
+    <div id="w" th:insert="fragments/boots :: sc2"></div>
+    <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+
+  </head>
+  <body>
+  <h1>Все продукты</h1>
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">Наименование продукта</th>
+      <th scope="col">Белки</th>
+      <th scope="col">Жиры</th>
+      <th scope="col">Углеводы</th>
+      <th scope="col">Хлебные единицы</th>
+    </tr>
+    </thead>
+    <tr th:each="pfc : ${pfcList}">
+      <td th:text="${pfc.name}"></td>
+      <td th:text="${pfc.proteins*100}"></td>
+      <td th:text="${pfc.fats*100}"></td>
+      <td th:text="${pfc.carbohydrates*100}"></td>
+      <td th:text="${pfc.breadUnits*100}"></td>
+    </tr>
+  </table>
+  </body>
+  </html>

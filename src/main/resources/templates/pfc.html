@@ -3,46 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <title>PFC</title>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
 </head>
 <body>
 <h1>Add PFC</h1>
 <form method="post" th:action="@{/pfc/add}">
   <label for="name">Name:</label>
-  <input type="text" id="name" name="name" required>
+  <input type="text" id="name" name="name" required class="form-control mt-2">
   <br>
-  <label for="proteins">Proteins:</label>
-  <input type="number" id="proteins" name="proteins" step="0.01" required>
+  <label for="proteins">Белки:</label>
+  <input type="number" id="proteins" name="proteins" step="0.01" required class="form-control mt-2">
   <br>
-  <label for="fats">Fats:</label>
-  <input type="number" id="fats" name="fats" step="0.01" required>
+  <label for="fats">Жиры:</label>
+  <input type="number" id="fats" name="fats" step="0.01" required class="form-control mt-2">
   <br>
-  <label for="carbohydrates">Carbohydrates:</label>
-  <input type="number" id="carbohydrates" name="carbohydrates" step="0.01" required>
+  <label for="carbohydrates">Углеводы:</label>
+  <input type="number" id="carbohydrates" name="carbohydrates" step="0.01" required class="form-control mt-2">
   <br>
 
-  <button type="submit">Add</button>
+  <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 
 <h1>PFC List</h1>
-<table>
-  <thead>
+<table class="table">
+  <thead class="thead-dark">
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Proteins</th>
-    <th>Fats</th>
-    <th>Carbohydrates</th>
-    <th>BreadUnits</th>
+    <th scope="col">ID</th>
+    <th scope="col">Наименование продукта</th>
+    <th scope="col">Белки</th>
+    <th scope="col">Жиры</th>
+    <th scope="col">Углеводы</th>
+    <th scope="col">Хлебные единицы</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="pfc : ${pfcList}">
     <td th:text="${pfc.id}">ID</td>
-    <td th:text="${pfc.name}">Name</td>
-    <td th:text="${pfc.proteins}">Proteins</td>
-    <td th:text="${pfc.fats}">Fats</td>
-    <td th:text="${pfc.carbohydrates}">Carbohydrates</td>
-    <td th:text="${pfc.breadUnits}">BreadUnits</td>
+    <td th:text="${pfc.name}">Наименование продукта</td>
+    <td th:text="${pfc.proteins}">Белки</td>
+    <td th:text="${pfc.fats}">Жиры</td>
+    <td th:text="${pfc.carbohydrates}">Углеводы</td>
+    <td th:text="${pfc.breadUnits}">Хлебные единицы</td>
   </tr>
   </tbody>
 </table>

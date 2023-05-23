@@ -2,14 +2,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
   <title>Spring Security Example </title>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
 </head>
 <body>
-Add new user
+<div class="container">
+Регистрация
 <p th:text="${message}"></p>
 <form th:action="@{/registration}" method="post">
-  <div><label> User Name : <input type="text" name="username"/> </label></div>
-  <div><label> Password: <input type="password" name="password"/> </label></div>
-  <div><input type="submit" value="Sign In"/></div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Имя пользователя : </label>
+    <div class="col-sm-6">
+      <input type="text" name="username" class="form-control" placeholder="Type Username"/> </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label"> Пароль:</label>
+    <div class="col-sm-6">
+      <input type="password" name="password"  class="form-control" placeholder="Type password"/> </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Регистрация</button>
 </form>
+</div>
 </body>
 </html>

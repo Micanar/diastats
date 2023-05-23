@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light"   th:fragment="targetFragmentToIncludeInOurPage">
+  <a class="navbar-brand" href="/">DiaStats</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item ">
+        <a class="nav-link" href="/main">Дневник самоконтроля </a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" href="/consumption">Дневник питания </a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" href="/pfcinfo">Подсчёт бжу </a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" href="/pfc/pfcs">Таблица бжу </a>
+      </li>
+    </ul>
+
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" value="Sign Out" class="btn btn-primary">Выйти из аккаунта</button>
+    </form>
+  </div>
+</nav>

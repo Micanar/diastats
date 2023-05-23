@@ -78,7 +78,7 @@ public class ProductConsumptionController {
             double proteins = pfc.getProteins() * grams;
             double fats = pfc.getFats() * grams;
             double carbohydrates = pfc.getCarbohydrates() * grams;
-            double breadUnits = pfc.getCarbohydrates()/12;
+            double breadUnits = pfc.getCarbohydrates()*grams/12;
             breadUnits = Math.round(breadUnits * 100.0) / 100.0;
 
             // Создаем новый объект ProductConsumption

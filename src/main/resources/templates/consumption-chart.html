@@ -3,6 +3,10 @@
 <head>
   <title>Product Consumption Chart</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
 </head>
 <body>
 <canvas id="myChart"></canvas>
