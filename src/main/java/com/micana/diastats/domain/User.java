@@ -16,6 +16,17 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private boolean active;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private User doctor;
+
+    public User getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
+    }
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

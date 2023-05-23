@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Set Doctor</title>
+</head>
+<body>
+<h2>Назначить доктора</h2>
+<form th:action="@{/role/save-doctor}" method="post">
+  <input type="hidden" name="userId" th:value="${user.id}">
+  <label>Введите имя доктора:</label>
+  <input type="text" name="doctorName">
+  <button type="submit">Назначить</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User Role</title>
+</head>
+<body>
+<h2>Edit User Role</h2>
+
+<form th:action="@{/role/save}" method="post">
+  <input type="hidden" name="id" th:value="${user.id}">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" th:value="${user.username}" readonly>
+
+  <label for="roles">Role:</label>
+  <select id="roles" name="roles" multiple="multiple">
+    <option th:each="role : ${roles}" th:value="${role}" th:text="${role}" th:selected="${user.roles.contains(role)}"></option>
+  </select>
+
+
+  <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

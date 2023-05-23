@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+</head>
+<body>
+<h2>User List</h2>
+<form action="/role" method="get">
+    <input type="text" name="search" placeholder="Search by username">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.username}"></td>
+        <td>
+            <span th:each="role : ${user.roles}" th:text="${role}"></span>
+        </td>
+        <td>
+            <a th:href="@{/role/edit/{userId}(userId=${user.id})}">Edit</a>
+            <a  th:href="@{/role/assign-doctor/{userId}(userId=${user.id})}">Assign Doctor</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
