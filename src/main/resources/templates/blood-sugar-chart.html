@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blood Sugar Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+
+<script th:inline="javascript">
+  var bloodSugars = /*[[${bloodSugars}]]*/ [];
+
+  // Извлечь данные из списков bloodSugars и создать массивы для графика
+  var sugarLevels = bloodSugars.map(function (bloodSugar) {
+    return bloodSugar.sugar;
+  });
+
+  var times = bloodSugars.map(function (bloodSugar) {
+    return bloodSugar.time;
+  });
+
+  // Создать график с использованием Chart.js
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: times,
+      datasets: [{
+        label: 'Blood Sugar Level',
+        data: sugarLevels,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Time'
+          }
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Sugar Level'
+          }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

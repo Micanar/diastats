@@ -45,6 +45,13 @@ public class MainController {
         return "main";
     }
 
+    @GetMapping("/blood-sugar/chart")
+    public String showBloodSugarChart(Model model, @AuthenticationPrincipal User user) {
+        Iterable<Blood_sugar> bloodSugars =  bloodRepo.findByPatient(user);
+        model.addAttribute("bloodSugars", bloodSugars);
+        return "blood-sugar-chart";
+    }
+
     @PostMapping("/main")
     public String add(@AuthenticationPrincipal User user, @RequestParam String sugar, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime time, Model model) {
         double sugarValue;

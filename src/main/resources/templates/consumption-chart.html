@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Consumption Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+
+<script th:inline="javascript">
+  var consumptions = /*[[${consumptions}]]*/ [];
+
+  // Извлечь данные из списков consumptions и создать массивы для графика
+  var consumptionDates = consumptions.map(function (consumption) {
+    return consumption.consumptionDate;
+  });
+
+  var consumptionGrams = consumptions.map(function (consumption) {
+    return consumption.grams;
+  });
+
+  // Создать график с использованием Chart.js
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: consumptionDates,
+      datasets: [{
+        label: 'Product Consumption',
+        data: consumptionGrams,
+        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+        borderColor: 'rgba(0, 123, 255, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Consumption Date'
+          }
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Consumption Grams'
+          }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
