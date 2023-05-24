@@ -2,30 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Doctor's Patients</title>
+  <title>Doctor Patients</title>
 </head>
 <body>
-<h1>Doctor's Patients</h1>
-
+<h2>Doctor Patients</h2>
 <table>
-  <thead>
   <tr>
     <th>Username</th>
-    <th>Roles</th>
-    <th>Edit</th>
+    <th>Actions</th>
   </tr>
-  </thead>
-  <tbody>
   <tr th:each="patient : ${patients}">
     <td th:text="${patient.username}"></td>
     <td>
-      <ul>
-        <li th:each="role : ${patient.roles}" th:text="${role}"></li>
-      </ul>
+      <a th:href="@{/patients/{userId}/stats(userId=${patient.id})}">View Stats</a>
     </td>
-    <td><a th:href="@{/user/{id}(id=${patient.id})}">Edit</a></td>
   </tr>
-  </tbody>
 </table>
 </body>
 </html>

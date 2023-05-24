@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Stats</title>
+</head>
+<body>
+<h2>User Stats</h2>
+<p>User: <span th:text="${user.username}"></span></p>
+<!-- Вывод информации о пользователе -->
+<form th:action="@{/users/{userId}/nutrition(userId=${user.id})}" method="get">
+  <button type="submit">View Nutrition</button>
+</form>
+<!-- Вывод показателей сахара -->
+<h2>Blood Sugar</h2>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Sugar Level</th>
+  </tr>
+  <!-- Итерация по списку показателей сахара -->
+  <tr th:each="bloodSugar : ${bloodSugarList}">
+    <td th:text="${bloodSugar.data}"></td>
+    <td th:text="${bloodSugar.time}"></td>
+    <td th:text="${bloodSugar.sugar}"></td>
+  </tr>
+</table>
+
+</body>
+</html>

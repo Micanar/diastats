@@ -18,4 +18,6 @@ public interface ProductConsumptionRepository extends CrudRepository<ProductCons
     List<ProductConsumption> findByUserAndConsumptionDateOrderByConsumptionDateDesc(User user, LocalDate date);
 
     List<ProductConsumption> findByUserOrderByConsumptionDateDesc(User user);
+
+    List<ProductConsumption> findByUser(User user);
 }

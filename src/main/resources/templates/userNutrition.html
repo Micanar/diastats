@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Nutrition</title>
+</head>
+<body>
+<h1>User Nutrition</h1>
+<h2>User: <span th:text="${user.username}"></span></h2>
+
+<table>
+  <thead>
+  <tr>
+    <th>Product</th>
+    <th>Grams</th>
+    <th>Date</th>
+    <th>Time</th>
+    <!-- Добавьте другие заголовки для показателей -->
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="nutrition : ${nutritionList}">
+    <td th:text="${nutrition.product.name}"></td>
+    <td th:text="${nutrition.grams}"></td>
+    <td th:text="${nutrition.consumptionDate}"></td>
+    <td th:text="${nutrition.consumptionTime}"></td>
+    <!-- Добавьте другие ячейки для показателей -->
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
