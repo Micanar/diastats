@@ -39,7 +39,7 @@ public class PFCInfoController {
             model.addAttribute("carbohydrates", carbohydrates);
             model.addAttribute("error", null);
         } else {
-            model.addAttribute("error", "Product not found");
+            model.addAttribute("error", "Продукт не найден");
         }
 
         Iterable<PFC> pfcList = pfcRepository.findAll();

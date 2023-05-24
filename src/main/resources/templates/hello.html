@@ -25,5 +25,10 @@
 
     Приятного использования Diastats!</div>
 
+<!-- Добавляем кнопку "Пациенты" только для пользователей с ролью DOCTOR -->
+<a th:href="@{/patients}" th:if="${isDoctor}" class="btn btn-primary">Пациенты</a>
+<a th:href="@{/role}" th:if="${isAdmin}" class="btn btn-primary">Админ панель</a>
+
+
 </body>
 </html>

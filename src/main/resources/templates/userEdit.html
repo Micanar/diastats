@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>User editor</title>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<h1>User editor</h1>
+<h1>Редактор пользователей</h1>
 
 <form th:action="@{/user}" method="post">
   <input type="text" name="username" th:value="${user.username}">
@@ -20,7 +25,7 @@
   <input type="hidden" th:value="${user.id}" name="userId">
   <input type="hidden" th:value="${_csrf.token}" name="_csrf">
 
-  <button type="submit">Save</button>
+  <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>
 </body>
 </html>

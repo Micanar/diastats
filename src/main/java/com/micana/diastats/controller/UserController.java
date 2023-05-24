@@ -7,13 +7,18 @@ import com.micana.diastats.repos.BloodRepo;
 import com.micana.diastats.repos.ProductConsumptionRepository;
 import com.micana.diastats.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class UserController {
@@ -83,4 +88,33 @@ public class UserController {
 
         return "userNutrition";
     }
+
+    @GetMapping("/users/{userId}/chart")
+    public String chart(@PathVariable Long userId, Model model, Principal principal) {
+        User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
+
+        if (user.getDoctor() == null) {
+            // Если у пациента нет врача, перенаправляем его на страницу accessDenied
+            return "accessDenied"; // Замените "/accessDenied" на URL страницы с сообщением об ошибке доступа
+        }
+
+        // Проверяем, является ли текущий пользователь доктором выбранного пользователя
+        if (!user.getDoctor().getUsername().equals(principal.getName())) {
+            // Если текущий пользователь не является доктором, перенаправляем его на другую страницу или выводим сообщение об ошибке
+            return "accessDenied"; // Замените "accessDenied" на имя страницы с сообщением об ошибке
+        }
+
+        List<String> dates = new ArrayList<>();
+        List<Double> sugarValues = new ArrayList<>();
+
+        Iterable<Blood_sugar> bloodSugarList = bloodSugarRepository.findByPatient(user);
+        List<Blood_sugar> sortedSugars = StreamSupport.stream(bloodSugarList.spliterator(), false)
+                .sorted(Comparator.comparing(Blood_sugar::getData).thenComparing(Blood_sugar::getTime).reversed())
+                .collect(Collectors.toList());
+        model.addAttribute("bloodSugars",bloodSugarList);
+
+        return "patientBloodSugarChart";
+    }
+
+
 }

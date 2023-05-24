@@ -2,22 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>User Stats</title>
+  <title>Дневник самоконтроля пациентов</title>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <div id="e" th:insert="fragments/docheader :: dochd"></div>
+
+
 </head>
 <body>
-<h2>User Stats</h2>
-<p>User: <span th:text="${user.username}"></span></p>
+<h2>Дневник самоконтроля</h2>
+<p>Пациент: <span th:text="${user.username}"></span></p>
 <!-- Вывод информации о пользователе -->
-<form th:action="@{/users/{userId}/nutrition(userId=${user.id})}" method="get">
-  <button type="submit">View Nutrition</button>
-</form>
+
 <!-- Вывод показателей сахара -->
-<h2>Blood Sugar</h2>
-<table>
+<h2>Показания сахаров</h2>
+<table class="table">
+  <thead class="thead-dark">
   <tr>
-    <th>Date</th>
-    <th>Time</th>
-    <th>Sugar Level</th>
+    <th scope="col">Дата</th>
+    <th scope="col">Время</th>
+    <th scope="col">Уровень сахара в крови</th>
   </tr>
   <!-- Итерация по списку показателей сахара -->
   <tr th:each="bloodSugar : ${bloodSugarList}">

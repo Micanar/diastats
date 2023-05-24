@@ -2,18 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>User Nutrition</title>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <div id="e" th:insert="fragments/docheader :: dochd"></div>
 </head>
 <body>
-<h1>User Nutrition</h1>
-<h2>User: <span th:text="${user.username}"></span></h2>
 
-<table>
-  <thead>
+<h1>Дневник питания пациента</h1>
+<h2>Пациент: <span th:text="${user.username}"></span></h2>
+
+<table class="table">
+  <thead class="thead-dark">
   <tr>
-    <th>Product</th>
-    <th>Grams</th>
-    <th>Date</th>
-    <th>Time</th>
+    <th scope="col">Продукт</th>
+    <th scope="col">Граммы</th>
+    <th scope="col">Дата</th>
+    <th scope="col">Время</th>
     <!-- Добавьте другие заголовки для показателей -->
   </tr>
   </thead>

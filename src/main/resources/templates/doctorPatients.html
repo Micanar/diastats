@@ -2,19 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Doctor Patients</title>
+  <title>Пациенты</title>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
 <h2>Doctor Patients</h2>
-<table>
+<form th:action="@{/patients}" method="GET">
+  <input type="text" name="username" placeholder="Введите имя пользователя" class="form-control mt-2">
+  <button type="submit" class="btn btn-primary">Фильтр</button>
+</form>
+
+<table class="table">
+  <thead class="thead-dark">
   <tr>
-    <th>Username</th>
-    <th>Actions</th>
+    <th scope="col">Имя</th>
+    <th scope="col">Дейтсвия</th>
   </tr>
   <tr th:each="patient : ${patients}">
     <td th:text="${patient.username}"></td>
     <td>
-      <a th:href="@{/patients/{userId}/stats(userId=${patient.id})}">View Stats</a>
+      <a th:href="@{/patients/{userId}/stats(userId=${patient.id})}">Посмотреть статистику</a>
     </td>
   </tr>
 </table>

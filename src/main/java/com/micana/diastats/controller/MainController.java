@@ -5,6 +5,7 @@ import com.micana.diastats.domain.User;
 import com.micana.diastats.repos.BloodRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
@@ -31,9 +33,22 @@ public class MainController {
     }
 
     @GetMapping("/hello")
-    public String hello() {
+    public String hello(Model model, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        boolean isDoctor = authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("DOCTOR"));
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ADMIN"));
+
+        // Передаем флаг в модель
+        model.addAttribute("isDoctor", isDoctor);
+        model.addAttribute("isAdmin", isAdmin);
+
         return "hello";
     }
+
+
 
     @GetMapping("/main")
     public String main(@AuthenticationPrincipal User user, Model model) {

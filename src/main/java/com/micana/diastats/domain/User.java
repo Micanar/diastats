@@ -20,6 +20,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "doctor_id")
     private User doctor;
 
+
+
     public User getDoctor() {
         return doctor;
     }

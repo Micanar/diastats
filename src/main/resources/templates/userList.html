@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>User List</title>
+    <div id="w" th:insert="fragments/boots :: sc2"></div>
+    <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+    <div id="script" th:insert="fragments/boots :: sc"></div>
+    <div id="q" th:insert="fragments/boots :: trap"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<h2>User List</h2>
+<h2>Список пользователей</h2>
 <form action="/role" method="get">
-    <input type="text" name="search" placeholder="Search by username">
-    <button type="submit">Search</button>
+    <input type="text" name="search" placeholder="Поиск по имени пользователя" class="form-control mt-2">
+    <button type="submit" class="btn btn-primary">Поиск</button>
 </form>
-<table>
+<table class="table">
+    <thead class="thead-dark">
     <tr>
-        <th>Username</th>
-        <th>Roles</th>
-        <th>Actions</th>
+        <th scope="col">Имя пользователя</th>
+        <th scope="col">Роль</th>
+        <th scope="col">Действия</th>
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.username}"></td>
@@ -22,8 +28,8 @@
             <span th:each="role : ${user.roles}" th:text="${role}"></span>
         </td>
         <td>
-            <a th:href="@{/role/edit/{userId}(userId=${user.id})}">Edit</a>
-            <a  th:href="@{/role/assign-doctor/{userId}(userId=${user.id})}">Assign Doctor</a>
+            <a th:href="@{/role/edit/{userId}(userId=${user.id})}">Изменить роль</a>
+            <a  th:href="@{/role/assign-doctor/{userId}(userId=${user.id})}">Назначить доктора</a>
         </td>
     </tr>
 </table>
