@@ -4,6 +4,7 @@ import com.micana.diastats.domain.Role;
 import com.micana.diastats.domain.User;
 import com.micana.diastats.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,6 +77,16 @@ public class RoleController {
         userRepo.save(user);
         return "redirect:/role";
     }
+
+    @PostMapping("/update-active/{userId}")
+    public ResponseEntity<String> updateActiveStatus(@PathVariable Long userId, @RequestParam Boolean active) {
+        User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
+        user.setActive(active);
+        userRepo.saveAndFlush(user);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 
 }

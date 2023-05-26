@@ -38,12 +38,12 @@ public class UserController {
 
         if (user.getDoctor() == null) {
             // Если у пациента нет врача, перенаправляем его на страницу accessDenied
-            return "accessDenied"; // Замените "/accessDenied" на URL страницы с сообщением об ошибке доступа
+            return "accessDenied";
         }
         // Проверяем, является ли текущий пользователь доктором выбранного пользователя
         if (!user.getDoctor().getUsername().equals(principal.getName())) {
             // Если текущий пользователь не является доктором, перенаправляем его на другую страницу или выводим сообщение об ошибке
-            return "accessDenied"; // Замените "accessDenied" на имя страницы с сообщением об ошибке
+            return "accessDenied";
         }
 
         Iterable<Blood_sugar> bloodSugarList = bloodSugarRepository.findByPatient(user);
@@ -62,13 +62,13 @@ public class UserController {
         // Проверяем, существует ли у пациента врач
         if (user.getDoctor() == null) {
             // Если у пациента нет врача, перенаправляем его на страницу accessDenied
-            return "accessDenied"; // Замените "/accessDenied" на URL страницы с сообщением об ошибке доступа
+            return "accessDenied";
         }
 
         // Проверяем, является ли текущий пользователь доктором выбранного пользователя
         if (!user.getDoctor().getUsername().equals(principal.getName())) {
             // Если текущий пользователь не является доктором, перенаправляем его на страницу accessDenied
-            return "accessDenied"; // Замените "/accessDenied" на URL страницы с сообщением об ошибке доступа
+            return "accessDenied";
         }
 
         List<ProductConsumption> nutritionList = productConsumptionRepository.findByUser(user);
@@ -95,13 +95,13 @@ public class UserController {
 
         if (user.getDoctor() == null) {
             // Если у пациента нет врача, перенаправляем его на страницу accessDenied
-            return "accessDenied"; // Замените "/accessDenied" на URL страницы с сообщением об ошибке доступа
+            return "accessDenied";
         }
 
         // Проверяем, является ли текущий пользователь доктором выбранного пользователя
         if (!user.getDoctor().getUsername().equals(principal.getName())) {
             // Если текущий пользователь не является доктором, перенаправляем его на другую страницу или выводим сообщение об ошибке
-            return "accessDenied"; // Замените "accessDenied" на имя страницы с сообщением об ошибке
+            return "accessDenied";
         }
 
         List<String> dates = new ArrayList<>();

@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ProductConsumptionRepository extends CrudRepository<ProductConsumption, Integer> {
     List<ProductConsumption> findByConsumptionDate(LocalDate date);
-    // Дополнительные методы, если необходимо
+
 
     List<ProductConsumption> findByUserAndConsumptionDateOrderByConsumptionDateDesc(User user, LocalDate date);
 

@@ -20,6 +20,7 @@
     <tr>
         <th scope="col">Имя пользователя</th>
         <th scope="col">Роль</th>
+        <th scope="col">Активен</th> <!-- Добавлен заголовок для активности пользователя -->
         <th scope="col">Действия</th>
     </tr>
     <tr th:each="user : ${users}">
@@ -28,10 +29,29 @@
             <span th:each="role : ${user.roles}" th:text="${role}"></span>
         </td>
         <td>
+            <input type="checkbox" th:checked="${user.active}" onchange="toggleActive(this, ${user.id})">
+        </td> <!-- Добавлен столбец для отображения и изменения активности пользователя -->
+        <td>
             <a th:href="@{/role/edit/{userId}(userId=${user.id})}">Изменить роль</a>
-            <a  th:href="@{/role/assign-doctor/{userId}(userId=${user.id})}">Назначить доктора</a>
+            <a th:href="@{/role/assign-doctor/{userId}(userId=${user.id})}">Назначить доктора</a>
         </td>
     </tr>
 </table>
+
+<script>
+    function toggleActive(checkbox, userId) {
+        var active = checkbox.checked;
+        fetch('/role/update-active/' + userId + '?active=' + active, {method: 'POST'})
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Failed to update active status');
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+</script>
+
 </body>
 </html>

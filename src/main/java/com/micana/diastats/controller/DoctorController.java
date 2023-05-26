@@ -23,7 +23,7 @@ public class DoctorController {
     @GetMapping("/patients")
     public String doctorPatients(@RequestParam(required = false) String username, Model model, Principal principal) {
 
-        // Получите текущего пользователя (доктора) по его идентификатору (username)
+
         User doctor = userRepo.findByUsername(principal.getName());
 
         // Получите список всех пациентов доктора
