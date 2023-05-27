@@ -3,6 +3,7 @@ package com.micana.diastats.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -15,9 +16,7 @@ public class Blood_sugar {
 
     private double sugar;
 
-    private LocalDate data;
-
-    private LocalTime time;
+    LocalDateTime dateTime;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User patient;
@@ -26,11 +25,10 @@ public class Blood_sugar {
     public Blood_sugar() {
     }
 
-    public Blood_sugar(double sugar, LocalDate data, LocalTime time,User user) {
+    public Blood_sugar(double sugar, LocalDateTime dateTime,User user) {
         this.patient = user;
         this.sugar = sugar;
-        this.data = data;
-        this.time = time;
+        this.dateTime=dateTime;
     }
 
 
@@ -54,19 +52,19 @@ public class Blood_sugar {
         this.sugar = sugar;
     }
 
-    public LocalDate getData() {
-        return data;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public User getPatient() {
+        return patient;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public void setPatient(User patient) {
+        this.patient = patient;
     }
 }

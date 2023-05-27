@@ -4,16 +4,21 @@ import com.micana.diastats.domain.Blood_sugar;
 import com.micana.diastats.domain.ProductConsumption;
 import com.micana.diastats.domain.User;
 import com.micana.diastats.repos.BloodRepo;
+import com.micana.diastats.repos.BloodSugarSortingService;
 import com.micana.diastats.repos.ProductConsumptionRepository;
 import com.micana.diastats.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,9 +36,14 @@ public class UserController {
     @Autowired
     private ProductConsumptionRepository productConsumptionRepository;
 
+    @Autowired
+    private BloodSugarSortingService bloodSugarSortingService;
+
 
     @GetMapping("/users/{userId}/stats")
-    public String viewUserStats(@PathVariable Long userId, Model model, Principal principal) {
+    public String viewUserStats(@PathVariable Long userId, Model model, Principal principal,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
 
         if (user.getDoctor() == null) {
@@ -46,12 +56,24 @@ public class UserController {
             return "accessDenied";
         }
 
+
         Iterable<Blood_sugar> bloodSugarList = bloodSugarRepository.findByPatient(user);
+        bloodSugarList=bloodSugarSortingService.sortBloodSugarByDateTime(bloodSugarList);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+        model.addAttribute("dateTimeFormatter", formatter);
+        if (startDate != null && endDate != null) {
+            bloodSugarList = StreamSupport.stream(bloodSugarList.spliterator(), false)
+                    .filter(bloodSugar -> isWithinDateRange(bloodSugar.getDateTime().toLocalDate(), startDate, endDate))
+                    .collect(Collectors.toList());
+        }
 
         model.addAttribute("user", user);
         model.addAttribute("bloodSugarList", bloodSugarList);
 
         return "userStats";
+    }
+    private boolean isWithinDateRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
 
     @GetMapping("/users/{userId}/nutrition")
@@ -108,9 +130,7 @@ public class UserController {
         List<Double> sugarValues = new ArrayList<>();
 
         Iterable<Blood_sugar> bloodSugarList = bloodSugarRepository.findByPatient(user);
-        List<Blood_sugar> sortedSugars = StreamSupport.stream(bloodSugarList.spliterator(), false)
-                .sorted(Comparator.comparing(Blood_sugar::getData).thenComparing(Blood_sugar::getTime).reversed())
-                .collect(Collectors.toList());
+
         model.addAttribute("bloodSugars",bloodSugarList);
 
         return "patientBloodSugarChart";

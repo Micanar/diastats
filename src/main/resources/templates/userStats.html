@@ -14,22 +14,30 @@
 </head>
 <body>
 <h2>Дневник самоконтроля</h2>
-<p>Пациент: <span th:text="${user.username}"></span></p>
+<h3><p>Пациент: <span th:text="${user.username}"></span></p></h3>
 <!-- Вывод информации о пользователе -->
-
+<form method="get" th:action="@{/users/{userId}/stats(userId=${user.id})}" class="form-inline">
+  <div class="form-group row">
+    <div class="col">
+      <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2">
+    </div>
+    <div class="col">
+      <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2">
+    </div>
+    <button type="submit" class="btn btn-outline-primary mt-4">Фильтровать</button>
+  </div>
+</form>
 <!-- Вывод показателей сахара -->
 <h2>Показания сахаров</h2>
 <table class="table">
   <thead class="thead-dark">
   <tr>
-    <th scope="col">Дата</th>
-    <th scope="col">Время</th>
+    <th scope="col">Дата и время</th>
     <th scope="col">Уровень сахара в крови</th>
   </tr>
   <!-- Итерация по списку показателей сахара -->
   <tr th:each="bloodSugar : ${bloodSugarList}">
-    <td th:text="${bloodSugar.data}"></td>
-    <td th:text="${bloodSugar.time}"></td>
+    <td><span th:text="${bloodSugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
     <td th:text="${bloodSugar.sugar}"></td>
   </tr>
 </table>

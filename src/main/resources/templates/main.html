@@ -18,31 +18,60 @@
 <div th:if="${errorMessage}" class="error-message">
     <span th:text="${errorMessage}"></span>
 </div>
+<p>
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить измерение глюкометра</a>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Фильтр показаний</button>
+</p>
+<div class="row">
+    <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample1">
+            <div class="card card-body">
+                <div class="container-fluid">
+                    <form method="post" th:action="@{/main}" class="form-inline">
+                        <div class="form-group row">
+                            <div class="col">
+                                <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2">
+                            </div>
+                            <div class="col">
+                                <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2">
+                            </div>
 
-<div class="form-group">
-    <form method="post" th:action="@{/main}" class="form-inline">
-        <div class="form-group row">
-        <div class="col">
-    <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2">
+                            <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
+                        </div>
+                    </form>
+                </div>
+                 </div>
         </div>
-            <div class="col">
-        <input type="date" name="date" placeholder="Дата" class="form-control mt-2">
+    </div>
+    <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample2">
+            <div class="card card-body">
+                <form method="get" th:action="@{/main}" class="form-inline">
+                    <div class="form-group row">
+                        <div class="col">
+                            <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2">
+                        </div>
+                        <div class="col">
+                            <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2">
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary mt-4">Фильтровать</button>
+                    </div>
+                </form>
+
             </div>
-            <div class="col">
-                <input type="time" name="time" placeholder="Время"class="form-control mt-2" >
-            </div>
-                <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
         </div>
-    </form>
+    </div>
 </div>
+
+
 <div>Список измерений сахаров у больного </div>
+
 <table class="table">
     <thead class="thead-dark">
     <tr>
 
         <th scope="col"> Сахар </th>
-        <th scope="col"> Дата </th>
-        <th scope="col"> Время </th>
+        <th scope="col">Дата и время</th>
         <th scope="col"> ID </th>
         <th scope="col"> Имя пользователя </th>
     </tr>
@@ -54,8 +83,7 @@
     <tr th:each="sugar : ${sugars}">
 
         <td ><span th:text="${sugar.sugar}"> Сахар </span></td>
-        <td ><span th:text="${sugar.data}"> Дата </span></td>
-        <td ><span th:text="${sugar.time}"> Время </span></td>
+        <td><span th:text="${sugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
         <td ><span th:text="${sugar.id}"> ID </span></td>
         <td ><span th:text="${sugar.patientName}"> Имя пользователя </span></td>
     </tr>
