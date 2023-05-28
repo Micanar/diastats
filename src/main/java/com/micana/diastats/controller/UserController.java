@@ -77,7 +77,9 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}/nutrition")
-    public String viewUserNutrition(@PathVariable Long userId, Model model, Principal principal) {
+    public String viewUserNutrition(@PathVariable Long userId, Model model, Principal principal,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
         User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
 
@@ -95,7 +97,15 @@ public class UserController {
 
         List<ProductConsumption> nutritionList = productConsumptionRepository.findByUser(user);
 
+
         model.addAttribute("user", user);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+        if (startDate != null && endDate != null) {
+            nutritionList = StreamSupport.stream(nutritionList.spliterator(), false)
+                    .filter(productConsumption -> isWithinDateRange(productConsumption.getConsumptionDateTime().toLocalDate(), startDate, endDate))
+                    .collect(Collectors.toList());
+        }
+        model.addAttribute("dateTimeFormatter", formatter);
         model.addAttribute("nutritionList", nutritionList);
 
         return "userNutrition";
@@ -130,8 +140,11 @@ public class UserController {
         List<Double> sugarValues = new ArrayList<>();
 
         Iterable<Blood_sugar> bloodSugarList = bloodSugarRepository.findByPatient(user);
+        List<Blood_sugar> sortedSugars = bloodSugarSortingService.sortBloodSugarByDateTimeChart(bloodSugarList);
 
-        model.addAttribute("bloodSugars",bloodSugarList);
+        model.addAttribute("bloodSugars",sortedSugars);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+        model.addAttribute("dateTimeFormatter", formatter);
 
         return "patientBloodSugarChart";
     }

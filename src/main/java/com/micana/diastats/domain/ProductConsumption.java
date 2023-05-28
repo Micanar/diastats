@@ -1,8 +1,7 @@
 package com.micana.diastats.domain;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 public class ProductConsumption {
@@ -15,11 +14,31 @@ public class ProductConsumption {
 
     private double grams;
 
-    private LocalDate consumptionDate;
-    private LocalTime consumptionTime;
+    private LocalDateTime consumptionDateTime;
 
     @ManyToOne
     private User user;
+
+    private String name;
+
+    public ProductConsumption(User user, String name, double grams, double proteins, double fats, double carbohydrates, double breadUnits, LocalDateTime dateTime) {
+        this.user=user;
+        this.name=name;
+        this.grams=grams;
+        this.proteins=proteins;
+        this.fats=fats;
+        this.carbohydrates=carbohydrates;
+        this.breadUnits=breadUnits;
+        this.consumptionDateTime=dateTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     private double proteins;
     private double fats;
@@ -29,11 +48,10 @@ public class ProductConsumption {
     public ProductConsumption() {
     }
 
-    public ProductConsumption(PFC product, double grams, LocalDate consumptionDate, LocalTime consumptionTime, User user) {
-        this.product= product;
+    public ProductConsumption(PFC product, double grams, LocalDateTime consumptionDateTime, User user) {
+        this.product = product;
         this.grams = grams;
-        this.consumptionDate = consumptionDate;
-        this.consumptionTime = consumptionTime;
+        this.consumptionDateTime = consumptionDateTime;
         this.user = user;
     }
 
@@ -61,20 +79,12 @@ public class ProductConsumption {
         this.grams = grams;
     }
 
-    public LocalDate getConsumptionDate() {
-        return consumptionDate;
+    public LocalDateTime getConsumptionDateTime() {
+        return consumptionDateTime;
     }
 
-    public void setConsumptionDate(LocalDate consumptionDate) {
-        this.consumptionDate = consumptionDate;
-    }
-
-    public LocalTime getConsumptionTime() {
-        return consumptionTime;
-    }
-
-    public void setConsumptionTime(LocalTime consumptionTime) {
-        this.consumptionTime = consumptionTime;
+    public void setConsumptionDateTime(LocalDateTime consumptionDateTime) {
+        this.consumptionDateTime = consumptionDateTime;
     }
 
     public User getUser() {

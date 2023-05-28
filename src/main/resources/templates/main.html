@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <include src="bootstrap-links.html"></include>
+    <title>BloodSugar</title>
     <div id="script" th:insert="fragments/boots :: sc"></div>
     <div id="q" th:insert="fragments/boots :: trap"></div>
     <div id="w" th:insert="fragments/boots :: sc2"></div>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <title>Title</title>
-    </head>
-<div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+    <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
 
 <body>
 
@@ -19,28 +18,21 @@
     <span th:text="${errorMessage}"></span>
 </div>
 <p>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить измерение глюкометра</a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Фильтр показаний</button>
-</p>
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить показание сахара</a>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Отфильтровать показания</button>
+    </p>
 <div class="row">
     <div class="col">
         <div class="collapse multi-collapse" id="multiCollapseExample1">
             <div class="card card-body">
-                <div class="container-fluid">
-                    <form method="post" th:action="@{/main}" class="form-inline">
-                        <div class="form-group row">
-                            <div class="col">
-                                <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2">
-                            </div>
-                            <div class="col">
-                                <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2">
-                            </div>
-
-                            <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
-                        </div>
-                    </form>
-                </div>
-                 </div>
+                <form method="post" th:action="@{/main}" >
+                    <div class="form-group row">
+                        <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2">
+                        <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2">
+                        <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <div class="col">
@@ -48,23 +40,25 @@
             <div class="card card-body">
                 <form method="get" th:action="@{/main}" class="form-inline">
                     <div class="form-group row">
-                        <div class="col">
+
                             <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2">
-                        </div>
-                        <div class="col">
+
+
                             <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2">
-                        </div>
+
                         <button type="submit" class="btn btn-outline-primary mt-4">Фильтровать</button>
                     </div>
                 </form>
-
             </div>
-        </div>
+
     </div>
 </div>
+    <div id="chartContainer" style="width: 300px; height: 300px;">
+        <canvas id="myChart" style="width: 100%; height: 100%;"></canvas>
+    </div>
 
 
-<div>Список измерений сахаров у больного </div>
+    <div>Список измерений сахаров у больного </div>
 
 <table class="table">
     <thead class="thead-dark">
@@ -89,6 +83,39 @@
     </tr>
     </tbody>
 </table>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+</div>
+<script th:inline="javascript">
+    var sugars = /*[[${sugars}]]*/ [];
+    var lowSugarCount = 0;
+    var mediumSugarCount = 0;
+    var highSugarCount = 0;
+
+    // Подсчет количества показаний в каждой категории
+    sugars.forEach(function (sugar) {
+        if (sugar.sugar < 4.0) {
+            lowSugarCount++;
+        } else if (sugar.sugar > 8.3) {
+            highSugarCount++;
+        } else {
+            mediumSugarCount++;
+        }
+    });
+
+    // Создание круговой диаграммы с использованием Chart.js
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Низкий уровень глюкозы', 'Средний уровень глюкозы', 'Высокий уровень глюкозы'],
+            datasets: [{
+                data: [lowSugarCount, mediumSugarCount, highSugarCount],
+                backgroundColor: ['blue', 'green', 'red']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 </body>
 </html>

@@ -6,22 +6,55 @@
     <div id="script" th:insert="fragments/boots :: sc"></div>
     <div id="q" th:insert="fragments/boots :: trap"></div>
     <div id="w" th:insert="fragments/boots :: sc2"></div>
+
     <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
 </head>
 <body>
 
-<h1>Добавить приём пищи</h1>
-<form method="post" th:action="@{/consumption}">
-    <label for="name">Название продукта:</label>
-    <input type="text" id="name" name="name" required class="form-control mt-2" ><br><br>
-    <label for="grams">Граммы:</label>
-    <input type="number" id="grams" name="grams" required class="form-control mt-2" ><br><br>
-    <label for="dateTime">Дата и время:</label>
-    <input type="datetime-local" id="dateTime" name="consumptionDateTime" required class="form-control mt-2"><br><br>
-    <button type="submit" class="btn btn-primary">Добавить</button>
-</form>
+
+
+
+<p>
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить приём пищи</a>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Отфильровать показания</button>
+    </p>
+<div class="row">
+    <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample1">
+            <div class="card card-body">
+                <form method="post" th:action="@{/consumption}">
+                    <label for="name">Название продукта:</label>
+                    <input type="text" id="name" name="name" required class="form-control mt-2" ><br><br>
+                    <label for="grams">Граммы:</label>
+                    <input type="number" id="grams" name="grams" required class="form-control mt-2" ><br><br>
+                    <label for="dateTime">Дата и время:</label>
+                    <input type="datetime-local" id="dateTime" name="dateTime" required class="form-control mt-2"><br><br>
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample2">
+            <div class="card card-body">
+                <form method="get" th:action="@{/consumption}" class="form-inline">
+                    <div class="form-group row">
+                        <div class="col">
+                            <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2">
+                        </div>
+                        <div class="col">
+                            <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2">
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary mt-4">Фильтровать</button>
+                    </div>
+                </form></div>
+        </div>
+    </div>
+</div>
+
 
 <h1>Дневник питания</h1>
+
 <table class="table">
     <thead class="thead-dark">
     <tr>
@@ -33,11 +66,11 @@
     </tr>
     </thead>
     <tr th:each="consumption : ${consumptions}">
-        <td th:text="${consumption.product.name}"></td>
+        <td th:text="${consumption.name}"></td>
         <td th:text="${consumption.grams}"></td>
         <td th:text="${consumption.carbohydrates}"></td>
         <td th:text="${consumption.breadUnits}"></td>
-        <td><span th:text="${consumption.consumptiondateTime.format(dateTimeFormatter)}">Дата и время</span></td>
+        <td th:text="${consumption.consumptionDateTime.format(dateTimeFormatter)}"></td>
     </tr>
 </table>
 </body>
