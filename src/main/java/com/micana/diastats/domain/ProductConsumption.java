@@ -15,20 +15,20 @@ public class ProductConsumption {
     private double grams;
 
     private LocalDateTime consumptionDateTime;
+    private String carbohydrateType;
 
     @ManyToOne
     private User user;
 
     private String name;
 
-    public ProductConsumption(User user, String name, double grams, double proteins, double fats, double carbohydrates, double breadUnits, LocalDateTime dateTime) {
+    public ProductConsumption(User user, String name, double grams, double proteins, double fats, double carbohydrates, LocalDateTime dateTime) {
         this.user=user;
         this.name=name;
         this.grams=grams;
         this.proteins=proteins;
         this.fats=fats;
         this.carbohydrates=carbohydrates;
-        this.breadUnits=breadUnits;
         this.consumptionDateTime=dateTime;
     }
 
@@ -46,6 +46,14 @@ public class ProductConsumption {
     private double breadUnits;
 
     public ProductConsumption() {
+    }
+
+    public String getCarbohydrateType() {
+        return carbohydrateType;
+    }
+
+    public void setCarbohydrateType(String carbohydrateType) {
+        this.carbohydrateType = carbohydrateType;
     }
 
     public ProductConsumption(PFC product, double grams, LocalDateTime consumptionDateTime, User user) {

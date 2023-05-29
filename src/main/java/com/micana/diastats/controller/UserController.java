@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,14 +62,78 @@ public class UserController {
         bloodSugarList=bloodSugarSortingService.sortBloodSugarByDateTime(bloodSugarList);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
         model.addAttribute("dateTimeFormatter", formatter);
-        if (startDate != null && endDate != null) {
-            bloodSugarList = StreamSupport.stream(bloodSugarList.spliterator(), false)
-                    .filter(bloodSugar -> isWithinDateRange(bloodSugar.getDateTime().toLocalDate(), startDate, endDate))
-                    .collect(Collectors.toList());
-        }
+        List<Blood_sugar> sortedBlood = bloodSugarSortingService.sortBloodSugarByDateTime(bloodSugarList);
 
         model.addAttribute("user", user);
-        model.addAttribute("bloodSugarList", bloodSugarList);
+        model.addAttribute("bloodSugarList", sortedBlood);
+
+
+        // Находим первую дату в списке sortedBlood
+        LocalDate firstDate = sortedBlood.get(0).getDateTime().toLocalDate();
+
+// Отфильтровываем значения только для первого дня
+        List<Blood_sugar> firstDayBlood = sortedBlood.stream()
+                .filter(bloodSugar -> bloodSugar.getDateTime().toLocalDate().isEqual(firstDate))
+                .collect(Collectors.toList());
+
+// Рассчитываем среднее значение для отфильтрованного списка
+        double averageSugarFirstDay = firstDayBlood.stream()
+                .mapToDouble(Blood_sugar::getSugar)
+                .average()
+                .orElse(0.0);
+
+        // Округляем значение до 1 знака после запятой
+        String formattedAverage = String.format("%.1f", averageSugarFirstDay);
+
+// Добавляем округленное значение в модель
+        model.addAttribute("formattedAverageSugarFirstDay", formattedAverage);
+        if (averageSugarFirstDay>8 &&firstDayBlood.size()>1){
+            model.addAttribute("attention","Cредний показатель сахаров за день у пациента довольно большой и близок к продолжительной гипергликемии,пациенту необходимо повышенное внимание");
+        }else if (averageSugarFirstDay<4&&firstDayBlood.size()>1){
+            model.addAttribute("attention","Средний показатель сахаров за день близок к продолжительной гипогликемии,пациенту необходимо повышенное внимание. ");
+        }
+
+// Добавляем среднее значение первого дня в модель
+        //Начало
+        // Получение текущей даты и времени
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime twoDaysAgo = currentDateTime.minusDays(2);
+
+        // Фильтрация записей за последние два дня с учетом значений
+        List<Blood_sugar> lastTwoDaysBlood = sortedBlood.stream()
+                .filter(bloodSugar -> {
+                    LocalDateTime bloodDateTime = bloodSugar.getDateTime();
+                    double bloodSugarValue = bloodSugar.getSugar();
+                    return bloodDateTime.isAfter(twoDaysAgo) &&
+                            bloodDateTime.isBefore(currentDateTime) &&
+                            (bloodSugarValue > 8.3 || bloodSugarValue < 4.0);
+                })
+                .collect(Collectors.toList());
+
+
+
+        // Выполнение расчетов и добавление сообщения в модель
+        if (lastTwoDaysBlood.size() > 4) {
+            long highSugarCount = lastTwoDaysBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getSugar() > 8.3)
+                    .count();
+
+            long lowSugarCount = lastTwoDaysBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getSugar() < 4.0)
+                    .count();
+
+            if (lowSugarCount>4 || highSugarCount>4) {
+                model.addAttribute("attention", "У пациента замечено слишком много перепадов показаний гликемии , пациенту необходима корректировка инсулина.");
+            } else if (lowSugarCount > 4) {
+                model.addAttribute("attention", "У пациента замечено довольно большое количество гипогликимических показаний за последние 2 дня,необходимо принять меры .");
+            }else if (highSugarCount > 4){
+                model.addAttribute("attention","У пациента замечено довольно большое количество гипергликемических показаний за последние 2 дня,необходио принять меры .");
+            }
+        }
+
+
+        //Конец
+
 
         return "userStats";
     }
@@ -107,6 +172,47 @@ public class UserController {
         }
         model.addAttribute("dateTimeFormatter", formatter);
         model.addAttribute("nutritionList", nutritionList);
+
+        // Фильтрация записей только для самого раннего дня
+        LocalDate earliestDate = nutritionList.get(0).getConsumptionDateTime().toLocalDate();
+        List<ProductConsumption> earliestDayConsumptions = nutritionList.stream()
+                .filter(consumption -> consumption.getConsumptionDateTime().toLocalDate().equals(earliestDate))
+                .collect(Collectors.toList());
+
+        // Переменные для подсчета суммарного потребления простых и сложных углеводов
+        double simpleCarbohydratesSum = 0;
+        double complexCarbohydratesSum = 0;
+        double totalBreadUnits = 0;
+
+
+        for (ProductConsumption consumption : earliestDayConsumptions) {
+            // Проверяем тип углеводов
+            if ("Простой".equals(consumption.getCarbohydrateType())) {
+                simpleCarbohydratesSum += consumption.getCarbohydrates();
+            } else if ("Сложный".equals(consumption.getCarbohydrateType())) {
+                complexCarbohydratesSum += consumption.getCarbohydrates();
+            }if (consumption.getBreadUnits()>8){
+                boolean overBreadUnits = true;
+                model.addAttribute("overBreadUnits", overBreadUnits);
+
+            }
+
+            // Подсчитываем общее количество хлебных единиц
+            totalBreadUnits += consumption.getBreadUnits();
+        }
+
+        // Проверяем, превышает ли потребление сложных углеводов 80% от общего количества углеводов
+        double totalCarbohydrates = simpleCarbohydratesSum + complexCarbohydratesSum;
+        double complexCarbohydratesPercentage = (complexCarbohydratesSum / totalCarbohydrates) * 100;
+
+        // Проверяем, превышает ли общее количество хлебных единиц 20
+        boolean exceedsBreadUnitsLimit = totalBreadUnits > 20;
+
+        model.addAttribute("simpleCarbohydratesSum", simpleCarbohydratesSum);
+        model.addAttribute("complexCarbohydratesSum", complexCarbohydratesSum);
+        model.addAttribute("complexCarbohydratesPercentage", complexCarbohydratesPercentage);
+        model.addAttribute("totalBreadUnits", totalBreadUnits);
+        model.addAttribute("exceedsBreadUnitsLimit", exceedsBreadUnitsLimit);
 
         return "userNutrition";
     }

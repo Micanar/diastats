@@ -17,6 +17,7 @@
 <div th:if="${errorMessage}" class="error-message">
     <span th:text="${errorMessage}"></span>
 </div>
+
 <p>
     <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить показание сахара</a>
     <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Отфильтровать показания</button>
@@ -52,6 +53,11 @@
             </div>
 
     </div>
+        <span th:text="${attention1}" style="color: red; font-size: 20px; font-weight: bold;"></span>
+        <br>
+        <span th:text="${attention}" style="color: red; font-size: 20px; font-weight: bold;"></span>
+
+        <div>Среднее значение сахара первого дня: <span th:text="${formattedAverageSugarFirstDay}"></span></div>
 </div>
     <div id="chartContainer" style="width: 300px; height: 300px;">
         <canvas id="myChart" style="width: 100%; height: 100%;"></canvas>
@@ -60,12 +66,15 @@
 
     <div>Список измерений сахаров у больного </div>
 
-<table class="table">
+
+
+    <table class="table">
     <thead class="thead-dark">
     <tr>
 
-        <th scope="col"> Сахар </th>
+
         <th scope="col">Дата и время</th>
+        <th scope="col"> Сахар </th>
         <th scope="col"> ID </th>
         <th scope="col"> Имя пользователя </th>
     </tr>
@@ -76,8 +85,9 @@
     </tr>
     <tr th:each="sugar : ${sugars}">
 
-        <td ><span th:text="${sugar.sugar}"> Сахар </span></td>
+
         <td><span th:text="${sugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
+        <td ><span th:text="${sugar.sugar}"> Сахар </span></td>
         <td ><span th:text="${sugar.id}"> ID </span></td>
         <td ><span th:text="${sugar.patientName}"> Имя пользователя </span></td>
     </tr>

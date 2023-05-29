@@ -37,7 +37,7 @@
         }
 
         @PostMapping("/add")
-        public String addPFC(@AuthenticationPrincipal User user, @RequestParam String name, @RequestParam double proteins, @RequestParam double fats, @RequestParam double carbohydrates) {
+        public String addPFC(@AuthenticationPrincipal User user, @RequestParam String name, @RequestParam double proteins, @RequestParam double fats, @RequestParam double carbohydrates,@RequestParam String carbohydrateType) {
             double proteinsInGrams = proteins / 100;
             double fatsInGrams = fats / 100;
             double carbohydratesInGrams = carbohydrates / 100;
@@ -49,7 +49,7 @@
             BigDecimal fatsBigDecimal = BigDecimal.valueOf(fatsInGrams).setScale(2, RoundingMode.HALF_UP);
             BigDecimal carbohydratesBigDecimal = BigDecimal.valueOf(carbohydratesInGrams).setScale(2, RoundingMode.HALF_UP);
 
-            PFC pfc = new PFC(name, proteinsBigDecimal.doubleValue(), fatsBigDecimal.doubleValue(), carbohydratesBigDecimal.doubleValue(),breadUnitsIngram);
+            PFC pfc = new PFC(name, proteinsBigDecimal.doubleValue(), fatsBigDecimal.doubleValue(), carbohydratesBigDecimal.doubleValue(),breadUnitsIngram,carbohydrateType);
             pfcRepository.save(pfc);
             return "redirect:/pfc/add";
         }

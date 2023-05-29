@@ -17,6 +17,7 @@
         private double fats;
         private double carbohydrates;
         private double breadUnits;
+        private String carbohydrateType;
 
         public PFC() {
         }
@@ -29,12 +30,21 @@
             this.breadUnits = breadUnits;
         }
 
-        public PFC(String name, double proteins, double fats, double carbohydrates, double breadUnits) {
+        public PFC(String name, double proteins, double fats, double carbohydrates, double breadUnits,String carbohydrateType) {
             this.name = name;
             this.proteins = proteins;
             this.fats = fats;
             this.carbohydrates = carbohydrates;
             this.breadUnits=breadUnits;
+            this.carbohydrateType=carbohydrateType;
+        }
+
+        public String getCarbohydrateType() {
+            return carbohydrateType;
+        }
+
+        public void setCarbohydrateType(String carbohydrateType) {
+            this.carbohydrateType = carbohydrateType;
         }
 
         public Integer getId() {

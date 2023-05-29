@@ -37,6 +37,7 @@ public class PFCInfoController {
             model.addAttribute("fats", fats);
             model.addAttribute("breadUnits", breadUnits);
             model.addAttribute("carbohydrates", carbohydrates);
+            model.addAttribute("type",pfc.getCarbohydrateType());
             model.addAttribute("error", null);
         } else {
             model.addAttribute("error", "Продукт не найден");

@@ -8,6 +8,7 @@
     <div id="w" th:insert="fragments/boots :: sc2"></div>
 
     <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -53,8 +54,59 @@
 </div>
 
 
-<h1>Дневник питания</h1>
 
+<div style="display: flex;">
+    <!-- Блок с выводом потребления углеводов -->
+    <div style="flex: 1;">
+        <!-- Вывод суммарного потребления простых и сложных углеводов -->
+        <p>
+            <span style="text-align: right;">Суммарное потребление простых углеводов за день:</span>
+            <span th:text="${simpleCarbohydratesSum}"></span>
+        </p>
+        <p>
+            <span style="text-align: right;">Суммарное потребление сложных углеводов за день :</span>
+            <span th:text="${complexCarbohydratesSum}"></span>
+        </p>
+
+        <!-- Вывод процента сложных углеводов от общего количества углеводов -->
+        <p>
+            <span style="text-align: right;">Процент сложных углеводов:</span>
+            <span th:text="${complexCarbohydratesPercentage}"></span>%
+        </p>
+
+
+
+        <!-- Вывод общего количества хлебных единиц -->
+        <p>
+            <span style="text-align: right;">Общее потребление хлебных единиц за день :</span>
+            <span th:text="${totalBreadUnits}"></span>
+        </p>
+
+        <!-- Предупреждение, если процент сложных углеводов меньше 80% -->
+        <div th:if="${complexCarbohydratesPercentage &lt; 80}">
+            <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Количество сложных углеводов меньше 80% от общего количества углеводов, пожалуйста старайтесь потреблять больше сложных углеводов.</p>
+        </div>
+
+        <!-- Предупреждение, если общее количество хлебных единиц превышает 20 -->
+        <div th:if="${exceedsBreadUnitsLimit}">
+            <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Общее количество хлебных единиц за день превышает 20, пожалуйста старайтесь употреблять меньше углеводов в пище.</p>
+        </div>
+
+        <div th:if="${overBreadUnits}">
+            <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Обнаружено большое количество съеденных углеводов за один приём пищи, пожалуйста старайтесь не употреблять такое количество углеводов за один раз.</p>
+        </div>
+
+    </div>
+
+    <!-- Блок с графиком -->
+    <div id="chartContainer" style="width: 300px; height: 300px; float: right;">
+        <canvas id="myChart" style="width: 100%; height: 100%;"></canvas>
+    </div>
+</div>
+
+
+
+<h1>Дневник питания</h1>
 <table class="table">
     <thead class="thead-dark">
     <tr>
@@ -62,6 +114,7 @@
         <th scope="col">Граммы</th>
         <th scope="col">Углеводы</th>
         <th  scope="col">Хлебные единицы</th>
+        <th  scope="col">Тип углеводов</th>
         <th  scope="col">Дата и время</th>
     </tr>
     </thead>
@@ -70,8 +123,42 @@
         <td th:text="${consumption.grams}"></td>
         <td th:text="${consumption.carbohydrates}"></td>
         <td th:text="${consumption.breadUnits}"></td>
+        <td th:text="${consumption.carbohydrateType}"></td>
         <td th:text="${consumption.consumptionDateTime.format(dateTimeFormatter)}"></td>
+
     </tr>
 </table>
+
+<script th:inline="javascript">
+    var consumptions = /*[[${consumptions}]]*/ [];
+    var easy = 0;
+    var hard = 0;
+
+
+    // Подсчет количества показаний в каждой категории
+    consumptions.forEach(function (consumption) {
+        if (consumption.carbohydrateType == "Простой") {
+            easy=easy+consumption.grams;
+        } else if (consumption.carbohydrateType == "Сложный") {
+            hard=hard+consumption.grams;
+        }
+    });
+
+    // Создание круговой диаграммы с использованием Chart.js
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Простые углеводы', 'Сложные углеводы'],
+            datasets: [{
+                data: [easy, hard],
+                backgroundColor: [ 'red', 'green']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 </body>
 </html>

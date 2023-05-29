@@ -63,7 +63,51 @@ public class ProductConsumptionController {
 
         model.addAttribute("consumptions", sortedConsuption);
 
+        // Фильтрация записей только для самого раннего дня
+        LocalDate earliestDate = sortedConsuption.get(0).getConsumptionDateTime().toLocalDate();
+        List<ProductConsumption> earliestDayConsumptions = sortedConsuption.stream()
+                .filter(consumption -> consumption.getConsumptionDateTime().toLocalDate().equals(earliestDate))
+                .collect(Collectors.toList());
+
+        // Переменные для подсчета суммарного потребления простых и сложных углеводов
+        double simpleCarbohydratesSum = 0;
+        double complexCarbohydratesSum = 0;
+        double totalBreadUnits = 0;
+
+
+        for (ProductConsumption consumption : earliestDayConsumptions) {
+            // Проверяем тип углеводов
+            if ("Простой".equals(consumption.getCarbohydrateType())) {
+                simpleCarbohydratesSum += consumption.getCarbohydrates();
+            } else if ("Сложный".equals(consumption.getCarbohydrateType())) {
+                complexCarbohydratesSum += consumption.getCarbohydrates();
+            }if (consumption.getBreadUnits()>8){
+                boolean overBreadUnits = true;
+                model.addAttribute("overBreadUnits", overBreadUnits);
+
+            }
+
+            // Подсчитываем общее количество хлебных единиц
+            totalBreadUnits += consumption.getBreadUnits();
+        }
+
+        // Проверяем, превышает ли потребление сложных углеводов 80% от общего количества углеводов
+        double totalCarbohydrates = simpleCarbohydratesSum + complexCarbohydratesSum;
+        double complexCarbohydratesPercentage = (complexCarbohydratesSum / totalCarbohydrates) * 100;
+
+        // Проверяем, превышает ли общее количество хлебных единиц 20
+        boolean exceedsBreadUnitsLimit = totalBreadUnits > 20;
+
+        model.addAttribute("simpleCarbohydratesSum", simpleCarbohydratesSum);
+        model.addAttribute("complexCarbohydratesSum", complexCarbohydratesSum);
+        model.addAttribute("complexCarbohydratesPercentage", complexCarbohydratesPercentage);
+        model.addAttribute("totalBreadUnits", totalBreadUnits);
+        model.addAttribute("exceedsBreadUnitsLimit", exceedsBreadUnitsLimit);
+
         return "consumption";
+
+
+
     }
     private boolean isWithinDateRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
@@ -79,8 +123,9 @@ public class ProductConsumptionController {
     @PostMapping("/consumption")
     public String addConsumption(@AuthenticationPrincipal User user, @RequestParam String name,
                                  @RequestParam double grams,
-                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTime) {
+                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTime,Model model) {
         PFC pfc = pfcRepository.findByName(name);
+
         if (pfc != null) {
             String nameConsumption = pfc.getName();
             double proteins = pfc.getProteins() * grams;
@@ -89,6 +134,7 @@ public class ProductConsumptionController {
             double breadUnits = pfc.getCarbohydrates() * grams / 12;
             breadUnits = Math.round(breadUnits * 100.0) / 100.0;
 
+            String carbohydrateType = pfc.getCarbohydrateType();
             // Создаем новый объект ProductConsumption
             ProductConsumption consumption = new ProductConsumption(pfc, grams, dateTime, user);
             consumption.setName(nameConsumption);
@@ -96,11 +142,17 @@ public class ProductConsumptionController {
             consumption.setFats(fats);
             consumption.setCarbohydrates(carbohydrates);
             consumption.setBreadUnits(breadUnits);
+            consumption.setCarbohydrateType(carbohydrateType);
 
             // Сохраняем объект ProductConsumption в репозитории
             productConsumptionRepository.save(consumption);
+        }else {
+            model.addAttribute("productNotFound", true);
+            return "addconsumption";
         }
         return "redirect:/consumption";
     }
 
-}
+    }
+
+

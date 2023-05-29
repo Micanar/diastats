@@ -18,6 +18,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -71,6 +72,72 @@ public class MainController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
         model.addAttribute("dateTimeFormatter", formatter);
 
+        // Находим первую дату в списке sortedBlood
+        LocalDate firstDate = sortedBlood.get(0).getDateTime().toLocalDate();
+
+// Отфильтровываем значения только для первого дня
+        List<Blood_sugar> firstDayBlood = sortedBlood.stream()
+                .filter(bloodSugar -> bloodSugar.getDateTime().toLocalDate().isEqual(firstDate))
+                .collect(Collectors.toList());
+
+// Рассчитываем среднее значение для отфильтрованного списка
+        double averageSugarFirstDay = firstDayBlood.stream()
+                .mapToDouble(Blood_sugar::getSugar)
+                .average()
+                .orElse(0.0);
+
+        // Округляем значение до 1 знака после запятой
+        String formattedAverage = String.format("%.1f", averageSugarFirstDay);
+
+// Добавляем округленное значение в модель
+        model.addAttribute("formattedAverageSugarFirstDay", formattedAverage);
+        if (averageSugarFirstDay>8&&firstDayBlood.size()>1){
+            model.addAttribute("attention","Ваш средний показатель сахаров за день довольно большой ,пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин.");
+        }else if (averageSugarFirstDay<4&&firstDayBlood.size()>1){
+            model.addAttribute("attention","Ваш средний показатель за день близок к продолжительной гипогликемии, пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин. ");
+        }
+
+// Добавляем среднее значение первого дня в модель
+        //Начало
+        // Получение текущей даты и времени
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime twoDaysAgo = currentDateTime.minusDays(2);
+
+        // Фильтрация записей за последние два дня с учетом значений
+        List<Blood_sugar> lastTwoDaysBlood = sortedBlood.stream()
+                .filter(bloodSugar -> {
+                    LocalDateTime bloodDateTime = bloodSugar.getDateTime();
+                    double bloodSugarValue = bloodSugar.getSugar();
+                    return bloodDateTime.isAfter(twoDaysAgo) &&
+                            bloodDateTime.isBefore(currentDateTime) &&
+                            (bloodSugarValue > 8.3 || bloodSugarValue < 4.0);
+                })
+                .collect(Collectors.toList());
+
+
+
+        // Выполнение расчетов и добавление сообщения в модель
+        if (lastTwoDaysBlood.size() > 4) {
+            long highSugarCount = lastTwoDaysBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getSugar() > 8.3)
+                    .count();
+
+            long lowSugarCount = lastTwoDaysBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getSugar() < 4.0)
+                    .count();
+
+            if (lowSugarCount>4 || highSugarCount>4) {
+                model.addAttribute("attention1", "У вас замечено слишком много перепадов показаний гликемии , пожалуйста проконсультируйтесь с врачом.");
+            } else if (lowSugarCount > 4) {
+                model.addAttribute("attention1", "У вас замечено довольно большое количество гипогликимических показаний за последние 2 дня,пожалуйста , проконсультируйтесь с врачом.");
+            }else if (highSugarCount > 4){
+                model.addAttribute("attention1","У вас замечео довольно большое количество гипергликемических показаний за последние 2 дня, пожалуйста проконсультируйтесь с врачом.");
+            }
+        }
+
+
+        //Конец
+
         return "main";
     }
 
@@ -97,6 +164,8 @@ public class MainController {
         model.addAttribute("bloodSugars", sortedBloodSugars);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
         model.addAttribute("dateTimeFormatter", formatter);
+
+
 
         return "blood-sugar-chart";
     }

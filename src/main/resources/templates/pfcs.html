@@ -21,6 +21,7 @@
       <th scope="col">Жиры</th>
       <th scope="col">Углеводы</th>
       <th scope="col">Хлебные единицы</th>
+      <th scope="col">Тип углеводов</th>
     </tr>
     </thead>
     <tr th:each="pfc : ${pfcList}">
@@ -29,6 +30,7 @@
       <td th:text="${pfc.fats*100}"></td>
       <td th:text="${pfc.carbohydrates*100}"></td>
       <td th:text="${pfc.breadUnits*100}"></td>
+      <td th:text="${pfc.carbohydrateType}"></td>
     </tr>
   </table>
   </body>
