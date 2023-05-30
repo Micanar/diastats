@@ -16,7 +16,9 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private String activationCode;
+
+
+
     private boolean active;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
@@ -110,11 +112,7 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getActivationCode() {
-        return activationCode;
-    }
 
-    public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
-    }
+
+
 }

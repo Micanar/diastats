@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+</head>
+<body>
+<h1>User Profile</h1>
+<p>Имя пользователя: <span th:text="${userProfile.user.username}"></span></p>
+<p>Пол: <span th:text="${userProfile.gender}"></span></p>
+<p>Рост: <span th:text="${userProfile.height}"></span> см</p>
+<p>Вес: <span th:text="${userProfile.weight}"></span> кг</p>
+<p>Возраст: <span th:text="${age}"></span> лет</p>
+<p>Дата рождения: <span th:text="${userProfile.birthdate.format(dateTimeFormatter)}"></span></p>
+<p>Индекс массы тела: <span th:text="${userProfile.bmi}"></span></p>
+
+<!-- Форма для обновления профиля пользователя -->
+<form method="post"  th:action="@{/profile}" >
+  <h2>Изменить данные</h2>
+  <label for="height">Рост (в см):</label>
+  <input type="text" id="height" name="height"  required><br><br>
+  <label for="weight">Вес (в кг):</label>
+  <input type="text" id="weight" name="weight" required><br><br>
+  <label for="gender">Пол:</label>
+  <select id="gender" name="gender">
+    <option value="Мужской" th:selected="${userProfile.gender == 'Мужской'}">Мужской</option>
+    <option value="Женский" th:selected="${userProfile.gender == 'Женский'}">Женский</option>
+  </select><br><br>
+  <label for="birthDate">Дата рождения:</label>
+  <input type="date" id="birthDate" name="birthDate" th:value="${userProfile.birthdate}" required><br><br>
+  <button type="submit">Сохранить</button>
+</form>
+</body>
+</html>
