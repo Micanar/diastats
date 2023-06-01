@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Analysis Form</title>
+  <!-- Подключение необходимых стилей и скриптов -->
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="container">
+  <h2>Analysis Form</h2>
+  <form th:object="${analysis}" th:action="@{/analysis/submit}" method="post">
+
+
+    <div class="form-group">
+      <select id="analysisTypeSelect" onchange="handleAnalysisTypeChange()" th:field="*{analysisType}">
+        <option value="liver">Показатели печёночные</option>
+        <option value="metabolism">Показатели обмена жиров</option>
+        <option value="insulin">Система собственного синтеза инсулина</option>
+        <option value="blood">Общий анализ крови</option>
+        <option value="urine">Общий анализ мочи</option>
+        <option value="creatinine">Креатинин</option>
+        <option value="urea">Мочевина</option>
+        <option value="uricAcid">Мочевая кислота</option>
+        <option value="glycatedHemoglobin">Гликированный гемоглобин</option>
+      </select>
+    </div>
+
+    <!-- Другие поля формы -->
+
+
+    <!-- Печеночные -->
+    <div id="liverFields" style="display: none;">
+      <h3>Показатели печёночные</h3>
+      <label for="ast">АСТ:</label>
+      <input type="text" value="0" name="ast" id="ast"  th:field="*{ast}"/><br>
+      <label for="alt">АЛТ:</label>
+      <input type="text" value="0" name="alt" id="alt" th:field="*{alt}"/><br>
+      <label for="ggt">ГГТП:</label>
+      <input type="text" value="0" name="ggt" id="ggt" th:field="*{ggtp}"/><br>
+      <label for="sf">ЩФ:</label>
+      <input type="text" value="0" name="sf" id="sf" th:field="*{wsf}"/><br>
+    </div>
+
+    <div id="metabolismFields" style="display: none;">
+      <h3>Показатели обмена жиров</h3>
+      <label for="totalCholesterol">Холестерин общий:</label>
+      <input type="text" value="0" name="totalCholesterol" id="totalCholesterol" /><br>
+      <label for="ldlCholesterol">ЛПВП:</label>
+      <input type="text" value="0" name="ldlCholesterol" id="ldlCholesterol" /><br>
+      <label for="hdlCholesterol">ЛПНП:</label>
+      <input type="text" value="0" name="hdlCholesterol" id="hdlCholesterol" /><br>
+      <label for="triglycerides">Триглицериды:</label>
+      <input type="text" value="0" name="triglycerides" id="triglycerides" /><br>
+      <label for="lpnp">ЛПОНП:</label>
+      <input type="text" value="0" name="lpnp" id="lpnp" /><br>
+    </div>
+
+    <div id="insulinFields" style="display: none;">
+      <h3>Система собственного синтеза инсулина</h3>
+      <label for="cPeptide">C-ПЕПТИД:</label>
+      <input type="text" value="0" name="cPeptide" id="cPeptide" /><br>
+      <label for="proinsulin">Проинсулин:</label>
+      <input type="text" value="0" name="proinsulin" id="proinsulin" /><br>
+      <label for="insulin">Инсулин:</label>
+      <input type="text" value="0" name="insulin" id="insulin" /><br>
+    </div>
+
+    <div id="bloodFields" style="display: none;">
+      <h3>Общий анализ крови</h3>
+      <label for="hemoglobin">Гемоглобин:</label>
+      <input type="text" value="0" name="hemoglobin" id="hemoglobin" /><br>
+      <label for="leukocytes">Лейкоциты:</label>
+      <input type="text" value="0" name="leukocytes" id="leukocytes" /><br>
+      <label for="esr">Скорость оседания эритроцитов:</label>
+      <input type="text" value="0" name="erythrocyteSedimentationRate" id="esr" /><br>
+    </div>
+
+    <div id="urineFields" style="display: none;">
+      <h3>Общий анализ мочи</h3>
+      <label for="specificGravity">Удельный вес мочи:</label>
+      <input type="text" value="0" name="specificGravity" id="specificGravity" /><br>
+      <label for="glucose">Глюкоза:</label>
+      <input type="text" value="0" name="glucose" id="glucose" /><br>
+      <label for="protein">Белок:</label>
+      <input type="text" value="0" name="protein" id="protein" /><br>
+      <label for="urineLeukocytes">Лейкоциты:</label>
+      <input type="text" value="0" name="urineLeukocytes" id="urineLeukocytes" /><br>
+      <label for="urineErythrocytes">Эритроциты:</label>
+      <input type="text" value="0" name="urineErythrocytes" id="urineErythrocytes" /><br>
+      <label for="bacteria">Бактерии:</label>
+      <input type="text" value="0" name="bacteria" id="bacteria" /><br>
+    </div>
+
+    <div id="creatinineFields" style="display: none;">
+      <h3>Креатинин</h3>
+      <label for="creatinine">Креатинин:</label>
+      <input type="text" value="0" name="creatinine" id="creatinine" /><br>
+    </div>
+
+    <div id="ureaFields" style="display: none;">
+      <h3>Мочевина</h3>
+      <label for="urea">Мочевина:</label>
+      <input type="text" value="0" name="urea" id="urea" /><br>
+    </div>
+
+    <div id="uricAcidFields" style="display: none;">
+      <h3>Мочевая кислота</h3>
+      <label for="uricAcid">Мочевая кислота:</label>
+      <input type="text" value="0" name="uricAcid" id="uricAcid" /><br>
+    </div>
+
+    <div id="glycatedHemoglobinFields" style="display: none;">
+      <h3>Гликированный гемоглобин</h3>
+      <label for="glycatedHemoglobin">Гликированный гемоглобин:</label>
+      <input type="text" value="0" name="glycatedHemoglobin" id="glycatedHemoglobin" /><br>
+
+    </div>
+
+    <input type="date" id="analysDate" name="analysDate" required><br><br>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  function handleAnalysisTypeChange() {
+    var analysisType = document.getElementById("analysisTypeSelect").value;
+
+    var liverFields = document.getElementById("liverFields");
+    var metabolismFields = document.getElementById("metabolismFields");
+    var insulinFields = document.getElementById("insulinFields");
+    var bloodFields = document.getElementById("bloodFields");
+    var urineFields = document.getElementById("urineFields");
+    var creatinineFields = document.getElementById("creatinineFields");
+    var ureaFields = document.getElementById("ureaFields");
+    var uricAcidFields = document.getElementById("uricAcidFields");
+    var glycatedHemoglobinFields = document.getElementById("glycatedHemoglobinFields");
+
+    liverFields.style.display = "none";
+    metabolismFields.style.display = "none";
+    insulinFields.style.display = "none";
+    bloodFields.style.display = "none";
+    urineFields.style.display = "none";
+    creatinineFields.style.display = "none";
+    ureaFields.style.display = "none";
+    uricAcidFields.style.display = "none";
+    glycatedHemoglobinFields.style.display = "none";
+
+    if (analysisType === "liver") {
+      liverFields.style.display = "block";
+    } else if (analysisType === "metabolism") {
+      metabolismFields.style.display = "block";
+    } else if (analysisType === "insulin") {
+      insulinFields.style.display = "block";
+    } else if (analysisType === "blood") {
+      bloodFields.style.display = "block";
+    } else if (analysisType === "urine") {
+      urineFields.style.display = "block";
+    } else if (analysisType === "creatinine") {
+      creatinineFields.style.display = "block";
+    } else if (analysisType === "urea") {
+      ureaFields.style.display = "block";
+    } else if (analysisType === "uricAcid") {
+      uricAcidFields.style.display = "block";
+    } else if (analysisType === "glycatedHemoglobin") {
+      glycatedHemoglobinFields.style.display = "block";
+    }
+  }
+</script>
+</body>
+</html>

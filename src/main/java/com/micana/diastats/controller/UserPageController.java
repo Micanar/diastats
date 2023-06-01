@@ -1,7 +1,9 @@
 package com.micana.diastats.controller;
 
+import com.micana.diastats.domain.Analysis;
 import com.micana.diastats.domain.User;
 import com.micana.diastats.domain.UserProfile;
+import com.micana.diastats.repos.AnalysisRepo;
 import com.micana.diastats.repos.UserProfileRepository;
 import com.micana.diastats.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,16 @@ public class UserPageController {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    @Autowired
+    private AnalysisRepo analysisRepository;
+
 
 
     @GetMapping("/profile")
     public String showUserProfile(Model model, @AuthenticationPrincipal User user) {
         // Получение профиля пользователя из репозитория
         UserProfile userProfile = userProfileRepository.findByUser(user);
+        Iterable<Analysis> analysis = analysisRepository.findByPatient(user);
 
         if (userProfile == null) {
             // Если профиль пользователя не найден, создаем новый профиль
@@ -53,11 +59,14 @@ public class UserPageController {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         model.addAttribute("dateTimeFormatter", formatter);
+        model.addAttribute("analysis", analysis);
         // Передача информации о пользователе в модель
         model.addAttribute("userProfile", userProfile);
 
         return "profile";
     }
+
+
 
     @PostMapping("/profile")
     public String updateUserProfile(@RequestParam("height") double height,

@@ -19,7 +19,7 @@
 <p>Индекс массы тела: <span th:text="${userProfile.bmi}"></span></p>
 
 <!-- Форма для обновления профиля пользователя -->
-<form method="post"  th:action="@{/profile}" >
+<form method="post"  th:action="@{/profile}"  class="form-inline">
   <h2>Изменить данные</h2>
   <label for="height">Рост (в см):</label>
   <input type="text" id="height" name="height"  required><br><br>
@@ -34,5 +34,57 @@
   <input type="date" id="birthDate" name="birthDate" th:value="${userProfile.birthdate}" required><br><br>
   <button type="submit">Сохранить</button>
 </form>
+
+<h1>Анализы</h1>
+<div  th:each="analys : ${analysis}">
+<div th:if="${analys.analysisType == 'glycatedHemoglobin'}">
+  <p>Гликированный гемоглобин: <span th:text="${analys.glycatedHemoglobin}"></span></p>
+</div>
+  <div th:if="${analys.analysisType == 'liver'}">
+    <h3>Показатели печёночные</h3>
+    <p>АСТ: <span th:text="${analys.ast}"></span></p>
+    <p>АЛТ: <span th:text="${analys.alt}"></span></p>
+    <p>ГГТП: <span th:text="${analys.ggtp}"></span></p>
+    <p>ЩФ: <span th:text="${analys.wsf}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'metabolism'}">
+    <h3>Показатели обмена жиров</h3>
+    <p>Общий холестерин: <span th:text="${analys.totalCholesterol}"></span></p>
+    <p>ЛПВП: <span th:text="${analys.ldlCholesterol}"></span></p>
+    <p>ЛПНП: <span th:text="${analys.hdlCholesterol}"></span></p>
+    <p>Триглицериды: <span th:text="${analys.triglycerides}"></span></p>
+    <p>ЛПОНП: <span th:text="${analys.lpnp  }"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'insulin'}">
+    <h3>Система собственного синтеза инсулина</h3>
+    <p>C-ПЕПТИД: <span th:text="${analys.cPeptide}"></span></p>
+    <p>Проинсулин: <span th:text="${analys.proinsulin}"></span></p>
+    <p>Инсулин: <span th:text="${analys.insulin}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'blood'}">
+    <h3>Общий анализ крови</h3>
+    <p>Гемоглобин: <span th:text="${analys.hemoglobin}"></span></p>
+    <p>Лейкоциты: <span th:text="${analys.leukocytes}"></span></p>
+    <p>Скорость оседания лейкоцитов: <span th:text="${analys.erythrocyteSedimentationRate}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'urine'}">
+    <h3>Общий анализ мочи</h3>
+    <p>Удельный вес мочи: <span th:text="${analys.specificGravity}"></span></p>
+    <p>Глюкоза: <span th:text="${analys.glucose}"></span></p>
+    <p>Лейкоциты: <span th:text="${analys.urineLeukocytes}"></span></p>
+    <p>Белок: <span th:text="${analys.protein}"></span></p>
+    <p>Эритроциты: <span th:text="${analys.urineErythrocytes}"></span></p>
+    <p>Бактерии: <span th:text="${analys.bacteria}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'creatinine'}">
+    <p>Креатинин: <span th:text="${analys.creatinine}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'urea'}">
+    <p>Мочевина: <span th:text="${analys.urea}"></span></p>
+  </div>
+  <div th:if="${analys.analysisType == 'uricAcid'}">
+    <p>Мочевая кислота: <span th:text="${analys.uricAcid}"></span></p>
+  </div>
+</div>
 </body>
 </html>
