@@ -64,35 +64,29 @@
     </div>
 
 
-    <div>Список измерений сахаров у больного </div>
-
-
+    <div>Список измерений сахаров у больного</div>
 
     <table class="table">
-    <thead class="thead-dark">
-    <tr>
-
-
-        <th scope="col">Дата и время</th>
-        <th scope="col"> Сахар </th>
-        <th scope="col"> ID </th>
-        <th scope="col"> Имя пользователя </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:if="${sugars != null and  sugars.empty}">
-        <td colspan="2"> У вас нет сахаров </td>
-    </tr>
-    <tr th:each="sugar : ${sugars}">
-
-
-        <td><span th:text="${sugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
-        <td ><span th:text="${sugar.sugar}"> Сахар </span></td>
-        <td ><span th:text="${sugar.id}"> ID </span></td>
-        <td ><span th:text="${sugar.patientName}"> Имя пользователя </span></td>
-    </tr>
-    </tbody>
-</table>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Дата и время</th>
+            <th scope="col">Сахар</th>
+            <th scope="col">ID</th>
+            <th scope="col">Имя пользователя</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${sugars == null or sugars.empty}">
+            <td colspan="4">У вас нет измерений сахара</td>
+        </tr>
+        <tr th:each="sugar : ${sugars}">
+            <td><span th:text="${sugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
+            <td><span th:text="${sugar.sugar}">Сахар</span></td>
+            <td><span th:text="${sugar.id}">ID</span></td>
+            <td><span th:text="${sugar.patientName}">Имя пользователя</span></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <script th:inline="javascript">
     var sugars = /*[[${sugars}]]*/ [];

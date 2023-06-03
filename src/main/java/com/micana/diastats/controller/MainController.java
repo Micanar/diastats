@@ -4,6 +4,7 @@ import com.micana.diastats.domain.Blood_sugar;
 import com.micana.diastats.domain.User;
 import com.micana.diastats.repos.BloodRepo;
 import com.micana.diastats.repos.BloodSugarSortingService;
+import com.micana.diastats.service.MailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,9 @@ public class MainController {
     @Autowired
     BloodSugarSortingService bloodSugarSortingService;
 
+    @Autowired
+    MailSenderService senderService;
+
     @GetMapping("/")
     public String greeting(Model model) {
         return "redirect:/hello";
@@ -59,6 +63,8 @@ public class MainController {
                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         Iterable<Blood_sugar> blood = bloodRepo.findByPatient(user);
 
+
+
         // Фильтрация данных о кровном сахаре по указанному периоду, если даты указаны
         if (startDate != null && endDate != null) {
             blood = StreamSupport.stream(blood.spliterator(), false)
@@ -67,78 +73,84 @@ public class MainController {
         }
 
         List<Blood_sugar> sortedBlood = bloodSugarSortingService.sortBloodSugarByDateTime(blood);
+        if (sortedBlood.isEmpty()){
+            model.addAttribute("errorMessage", "Список измерений сахара пуст.");
+            return "main";
 
-        model.addAttribute("sugars", sortedBlood);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
-        model.addAttribute("dateTimeFormatter", formatter);
+        }else {
 
-        // Находим первую дату в списке sortedBlood
-        LocalDate firstDate = sortedBlood.get(0).getDateTime().toLocalDate();
+
+            model.addAttribute("sugars", sortedBlood);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+            model.addAttribute("dateTimeFormatter", formatter);
+
+            // Находим первую дату в списке sortedBlood
+            LocalDate firstDate = sortedBlood.get(0).getDateTime().toLocalDate();
 
 // Отфильтровываем значения только для первого дня
-        List<Blood_sugar> firstDayBlood = sortedBlood.stream()
-                .filter(bloodSugar -> bloodSugar.getDateTime().toLocalDate().isEqual(firstDate))
-                .collect(Collectors.toList());
+            List<Blood_sugar> firstDayBlood = sortedBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getDateTime().toLocalDate().isEqual(firstDate))
+                    .collect(Collectors.toList());
 
 // Рассчитываем среднее значение для отфильтрованного списка
-        double averageSugarFirstDay = firstDayBlood.stream()
-                .mapToDouble(Blood_sugar::getSugar)
-                .average()
-                .orElse(0.0);
+            double averageSugarFirstDay = firstDayBlood.stream()
+                    .mapToDouble(Blood_sugar::getSugar)
+                    .average()
+                    .orElse(0.0);
 
-        // Округляем значение до 1 знака после запятой
-        String formattedAverage = String.format("%.1f", averageSugarFirstDay);
+            // Округляем значение до 1 знака после запятой
+            String formattedAverage = String.format("%.1f", averageSugarFirstDay);
 
 // Добавляем округленное значение в модель
-        model.addAttribute("formattedAverageSugarFirstDay", formattedAverage);
-        if (averageSugarFirstDay>8&&firstDayBlood.size()>1){
-            model.addAttribute("attention","Ваш средний показатель сахаров за день довольно большой ,пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин.");
-        }else if (averageSugarFirstDay<4&&firstDayBlood.size()>1){
-            model.addAttribute("attention","Ваш средний показатель за день близок к продолжительной гипогликемии, пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин. ");
-        }
+            model.addAttribute("formattedAverageSugarFirstDay", formattedAverage);
+            if (averageSugarFirstDay > 8 && firstDayBlood.size() > 1) {
+                model.addAttribute("attention", "Ваш средний показатель сахаров за день довольно большой ,пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин.");
+            } else if (averageSugarFirstDay < 4 && firstDayBlood.size() > 1) {
+                model.addAttribute("attention", "Ваш средний показатель за день близок к продолжительной гипогликемии, пожалуйста проконтролируйте количество съеденных углеводов и введенный инсулин. ");
+            }
 
 // Добавляем среднее значение первого дня в модель
-        //Начало
-        // Получение текущей даты и времени
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime twoDaysAgo = currentDateTime.minusDays(2);
+            //Начало
+            // Получение текущей даты и времени
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime twoDaysAgo = currentDateTime.minusDays(2);
 
-        // Фильтрация записей за последние два дня с учетом значений
-        List<Blood_sugar> lastTwoDaysBlood = sortedBlood.stream()
-                .filter(bloodSugar -> {
-                    LocalDateTime bloodDateTime = bloodSugar.getDateTime();
-                    double bloodSugarValue = bloodSugar.getSugar();
-                    return bloodDateTime.isAfter(twoDaysAgo) &&
-                            bloodDateTime.isBefore(currentDateTime) &&
-                            (bloodSugarValue > 8.3 || bloodSugarValue < 4.0);
-                })
-                .collect(Collectors.toList());
+            // Фильтрация записей за последние два дня с учетом значений
+            List<Blood_sugar> lastTwoDaysBlood = sortedBlood.stream()
+                    .filter(bloodSugar -> {
+                        LocalDateTime bloodDateTime = bloodSugar.getDateTime();
+                        double bloodSugarValue = bloodSugar.getSugar();
+                        return bloodDateTime.isAfter(twoDaysAgo) &&
+                                bloodDateTime.isBefore(currentDateTime) &&
+                                (bloodSugarValue > 8.3 || bloodSugarValue < 4.0);
+                    })
+                    .collect(Collectors.toList());
 
 
+            // Выполнение расчетов и добавление сообщения в модель
+            if (lastTwoDaysBlood.size() > 4) {
+                long highSugarCount = lastTwoDaysBlood.stream()
+                        .filter(bloodSugar -> bloodSugar.getSugar() > 8.3)
+                        .count();
 
-        // Выполнение расчетов и добавление сообщения в модель
-        if (lastTwoDaysBlood.size() > 4) {
-            long highSugarCount = lastTwoDaysBlood.stream()
-                    .filter(bloodSugar -> bloodSugar.getSugar() > 8.3)
-                    .count();
+                long lowSugarCount = lastTwoDaysBlood.stream()
+                        .filter(bloodSugar -> bloodSugar.getSugar() < 4.0)
+                        .count();
 
-            long lowSugarCount = lastTwoDaysBlood.stream()
-                    .filter(bloodSugar -> bloodSugar.getSugar() < 4.0)
-                    .count();
-
-            if (lowSugarCount>4 || highSugarCount>4) {
-                model.addAttribute("attention1", "У вас замечено слишком много перепадов показаний гликемии , пожалуйста проконсультируйтесь с врачом.");
-            } else if (lowSugarCount > 4) {
-                model.addAttribute("attention1", "У вас замечено довольно большое количество гипогликимических показаний за последние 2 дня,пожалуйста , проконсультируйтесь с врачом.");
-            }else if (highSugarCount > 4){
-                model.addAttribute("attention1","У вас замечео довольно большое количество гипергликемических показаний за последние 2 дня, пожалуйста проконсультируйтесь с врачом.");
+                if (lowSugarCount > 4 || highSugarCount > 4) {
+                    model.addAttribute("attention1", "У вас замечено слишком много перепадов показаний гликемии , пожалуйста проконсультируйтесь с врачом.");
+                } else if (lowSugarCount > 4) {
+                    model.addAttribute("attention1", "У вас замечено довольно большое количество гипогликимических показаний за последние 2 дня,пожалуйста , проконсультируйтесь с врачом.");
+                } else if (highSugarCount > 4) {
+                    model.addAttribute("attention1", "У вас замечео довольно большое количество гипергликемических показаний за последние 2 дня, пожалуйста проконсультируйтесь с врачом.");
+                }
             }
+
+
+            //Конец
+
+            return "main";
         }
-
-
-        //Конец
-
-        return "main";
     }
 
     private boolean isWithinDateRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
@@ -185,7 +197,81 @@ public class MainController {
             return "main";
         }
         Blood_sugar blood_sugar = new Blood_sugar(sugarValue, dateTime, user);
+
         bloodRepo.save(blood_sugar);
+
+        if (user.getDoctor()!=null) {
+
+            Iterable<Blood_sugar> blood = bloodRepo.findByPatient(user);
+            List<Blood_sugar> sortedBlood = bloodSugarSortingService.sortBloodSugarByDateTime(blood);
+            LocalDate firstDate = sortedBlood.get(0).getDateTime().toLocalDate();
+
+// Отфильтровываем значения только для первого дня
+            List<Blood_sugar> firstDayBlood = sortedBlood.stream()
+                    .filter(bloodSugar -> bloodSugar.getDateTime().toLocalDate().isEqual(firstDate))
+                    .collect(Collectors.toList());
+
+// Рассчитываем среднее значение для отфильтрованного списка
+            double averageSugarFirstDay = firstDayBlood.stream()
+                    .mapToDouble(Blood_sugar::getSugar)
+                    .average()
+                    .orElse(0.0);
+
+            // Округляем значение до 1 знака после запятой
+            String formattedAverage = String.format("%.1f", averageSugarFirstDay);
+
+
+// Добавляем округленное значение в модель
+
+
+
+// Добавляем среднее значение первого дня в модель
+            //Начало
+            // Получение текущей даты и времени
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime twoDaysAgo = currentDateTime.minusDays(2);
+
+            // Фильтрация записей за последние два дня с учетом значений
+            List<Blood_sugar> lastTwoDaysBlood = sortedBlood.stream()
+                    .filter(bloodSugar -> {
+                        LocalDateTime bloodDateTime = bloodSugar.getDateTime();
+                        double bloodSugarValue = bloodSugar.getSugar();
+                        return bloodDateTime.isAfter(twoDaysAgo) &&
+                                bloodDateTime.isBefore(currentDateTime) &&
+                                (bloodSugarValue > 8.3 || bloodSugarValue < 4.0);
+                    })
+                    .collect(Collectors.toList());
+
+
+            // Выполнение расчетов и добавление сообщения в модель
+            if (lastTwoDaysBlood.size() > 4) {
+                long highSugarCount = lastTwoDaysBlood.stream()
+                        .filter(bloodSugar -> bloodSugar.getSugar() > 8.3)
+                        .count();
+
+                long lowSugarCount = lastTwoDaysBlood.stream()
+                        .filter(bloodSugar -> bloodSugar.getSugar() < 4.0)
+                        .count();
+
+                if (averageSugarFirstDay > 8 && firstDayBlood.size() > 2 && blood_sugar.getSugar()>8) {
+                    senderService.sendSimpleEmail(user.getDoctor().getEmail(),"Уведомление о проблеме","Здравствуйте , пользователь:"+user.getUsername()+" ввел новое показание измерения сахара:"+blood_sugar.getSugar()+
+                            " его средний показатель гликемии довольно высок и стремится к продолжительной гипергликемии. \n Средний показатель гикемии составляет:"+formattedAverage+" .");
+                } else if (averageSugarFirstDay < 4 && firstDayBlood.size() > 2 && blood_sugar.getSugar()<4) {
+                    senderService.sendSimpleEmail(user.getDoctor().getEmail(),"Уведомление о проблеме","Здравствуйте , пользователь:"+user.getUsername()+" ввел новое показание измерения сахара:"+blood_sugar.getSugar()+
+                            " его средний показатель гликемии довольно низок и стремится к продолжительной гипогликемии. \n Средний показатель гикемии составляет:"+formattedAverage+" .");
+                } else if (lowSugarCount > 4 || highSugarCount > 4 && blood_sugar.getSugar()>8 && blood_sugar.getSugar()<4) {
+                    senderService.sendSimpleEmail(user.getDoctor().getEmail(),"Уведомление о проблеме","Здравствуйте , пользователь:"+user.getUsername()+" ввел новое показание измерения сахара:"+blood_sugar.getSugar()+
+                            ", у пользователя обнаружено большое количество перепадов гликемических показаний за последние 2 дня   .");
+                } else if (lowSugarCount > 4 && blood_sugar.getSugar()<4) {
+                    senderService.sendSimpleEmail(user.getDoctor().getEmail(),"Уведомление о проблеме","Здравствуйте , пользователь:"+user.getUsername()+" ввел новое показание измерения сахара:"+blood_sugar.getSugar()+
+                            ", у пользователя обнаружено большое количество низких показаний сахаров за 2 дня  .");
+                } else if (highSugarCount > 4 && blood_sugar.getSugar()>8) {
+                    senderService.sendSimpleEmail(user.getDoctor().getEmail(),"Уведомление о проблеме","Здравствуйте , пользователь:"+user.getUsername()+" ввел новое показание измерения сахара:"+blood_sugar.getSugar()+
+                            ", у пользователя обнаружено большое количество высоких показаний сахаров за 2 дня  .");
+                }
+            }
+        }
+
         return "redirect:/main";
     }
 }

@@ -50,6 +50,8 @@ public class ProductConsumptionController {
 
 
             consumptions = productConsumptionRepository.findByUserOrderByConsumptionDateTimeDesc(user);
+
+
         if (startDate != null && endDate != null) {
             consumptions = StreamSupport.stream(consumptions.spliterator(), false)
                     .filter(consumption -> isWithinDateRange(consumption.getConsumptionDateTime().toLocalDate(), startDate, endDate))
@@ -57,55 +59,60 @@ public class ProductConsumptionController {
         }
 
             List<ProductConsumption> sortedConsuption =productConsumptionSortingService.sortProductConsumptionByDateTime(consumptions);
+        if (sortedConsuption.isEmpty()){
+            return "consumption";
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
-        model.addAttribute("dateTimeFormatter", formatter);
+        }else {
 
-        model.addAttribute("consumptions", sortedConsuption);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+            model.addAttribute("dateTimeFormatter", formatter);
 
-        // Фильтрация записей только для самого раннего дня
-        LocalDate earliestDate = sortedConsuption.get(0).getConsumptionDateTime().toLocalDate();
-        List<ProductConsumption> earliestDayConsumptions = sortedConsuption.stream()
-                .filter(consumption -> consumption.getConsumptionDateTime().toLocalDate().equals(earliestDate))
-                .collect(Collectors.toList());
+            model.addAttribute("consumptions", sortedConsuption);
 
-        // Переменные для подсчета суммарного потребления простых и сложных углеводов
-        double simpleCarbohydratesSum = 0;
-        double complexCarbohydratesSum = 0;
-        double totalBreadUnits = 0;
+            // Фильтрация записей только для самого раннего дня
+            LocalDate earliestDate = sortedConsuption.get(0).getConsumptionDateTime().toLocalDate();
+            List<ProductConsumption> earliestDayConsumptions = sortedConsuption.stream()
+                    .filter(consumption -> consumption.getConsumptionDateTime().toLocalDate().equals(earliestDate))
+                    .collect(Collectors.toList());
+
+            // Переменные для подсчета суммарного потребления простых и сложных углеводов
+            double simpleCarbohydratesSum = 0;
+            double complexCarbohydratesSum = 0;
+            double totalBreadUnits = 0;
 
 
-        for (ProductConsumption consumption : earliestDayConsumptions) {
-            // Проверяем тип углеводов
-            if ("Простой".equals(consumption.getCarbohydrateType())) {
-                simpleCarbohydratesSum += consumption.getCarbohydrates();
-            } else if ("Сложный".equals(consumption.getCarbohydrateType())) {
-                complexCarbohydratesSum += consumption.getCarbohydrates();
-            }if (consumption.getBreadUnits()>8){
-                boolean overBreadUnits = true;
-                model.addAttribute("overBreadUnits", overBreadUnits);
+            for (ProductConsumption consumption : earliestDayConsumptions) {
+                // Проверяем тип углеводов
+                if ("Простой".equals(consumption.getCarbohydrateType())) {
+                    simpleCarbohydratesSum += consumption.getCarbohydrates();
+                } else if ("Сложный".equals(consumption.getCarbohydrateType())) {
+                    complexCarbohydratesSum += consumption.getCarbohydrates();
+                }
+                if (consumption.getBreadUnits() > 8) {
+                    boolean overBreadUnits = true;
+                    model.addAttribute("overBreadUnits", overBreadUnits);
 
+                }
+
+                // Подсчитываем общее количество хлебных единиц
+                totalBreadUnits += consumption.getBreadUnits();
             }
 
-            // Подсчитываем общее количество хлебных единиц
-            totalBreadUnits += consumption.getBreadUnits();
+            // Проверяем, превышает ли потребление сложных углеводов 80% от общего количества углеводов
+            double totalCarbohydrates = simpleCarbohydratesSum + complexCarbohydratesSum;
+            double complexCarbohydratesPercentage = (complexCarbohydratesSum / totalCarbohydrates) * 100;
+
+            // Проверяем, превышает ли общее количество хлебных единиц 20
+            boolean exceedsBreadUnitsLimit = totalBreadUnits > 20;
+
+            model.addAttribute("simpleCarbohydratesSum", simpleCarbohydratesSum);
+            model.addAttribute("complexCarbohydratesSum", complexCarbohydratesSum);
+            model.addAttribute("complexCarbohydratesPercentage", complexCarbohydratesPercentage);
+            model.addAttribute("totalBreadUnits", totalBreadUnits);
+            model.addAttribute("exceedsBreadUnitsLimit", exceedsBreadUnitsLimit);
+
+            return "consumption";
         }
-
-        // Проверяем, превышает ли потребление сложных углеводов 80% от общего количества углеводов
-        double totalCarbohydrates = simpleCarbohydratesSum + complexCarbohydratesSum;
-        double complexCarbohydratesPercentage = (complexCarbohydratesSum / totalCarbohydrates) * 100;
-
-        // Проверяем, превышает ли общее количество хлебных единиц 20
-        boolean exceedsBreadUnitsLimit = totalBreadUnits > 20;
-
-        model.addAttribute("simpleCarbohydratesSum", simpleCarbohydratesSum);
-        model.addAttribute("complexCarbohydratesSum", complexCarbohydratesSum);
-        model.addAttribute("complexCarbohydratesPercentage", complexCarbohydratesPercentage);
-        model.addAttribute("totalBreadUnits", totalBreadUnits);
-        model.addAttribute("exceedsBreadUnitsLimit", exceedsBreadUnitsLimit);
-
-        return "consumption";
-
 
 
     }
@@ -149,6 +156,10 @@ public class ProductConsumptionController {
         }else {
             model.addAttribute("productNotFound", true);
             return "addconsumption";
+        }
+
+        if (user.getDoctor()!=null){
+
         }
         return "redirect:/consumption";
     }

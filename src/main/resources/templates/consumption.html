@@ -83,7 +83,7 @@
         </p>
 
         <!-- Предупреждение, если процент сложных углеводов меньше 80% -->
-        <div th:if="${complexCarbohydratesPercentage &lt; 80}">
+        <div th:if="${complexCarbohydratesPercentage &lt; 80 and complexCarbohydratesPercentage !=null}">
             <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Количество сложных углеводов меньше 80% от общего количества углеводов, пожалуйста старайтесь потреблять больше сложных углеводов.</p>
         </div>
 

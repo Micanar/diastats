@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirm Registration</title>
+</head>
+<body>
+<h1>Confirm Registration</h1>
+<form th:action="@{/confirm}" method="post">
+  <input type="hidden" name="username" value="${user.username}" />
+  <label for="confirmationCode">Confirmation Code:</label>
+  <input type="text" id="confirmationCode" name="confirmationCode" required />
+  <button type="submit">Confirm</button>
+</form>
+<div th:if="${message}" class="error-message">
+  <span th:text="${message}"></span>
+</div>
+</body>
+</html>
