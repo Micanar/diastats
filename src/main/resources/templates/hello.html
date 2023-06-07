@@ -6,7 +6,7 @@
     <div id="script" th:insert="fragments/boots :: sc"></div>
     <div id="q" th:insert="fragments/boots :: trap"></div>
     <div id="w" th:insert="fragments/boots :: sc2"></div>
-    <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+
 </head>
 <body>
 <div class="container mt-5"></div>
@@ -28,6 +28,7 @@
 <!-- Добавляем кнопку "Пациенты" только для пользователей с ролью DOCTOR -->
 <a th:href="@{/patients}" th:if="${isDoctor}" class="btn btn-primary">Пациенты</a>
 <a th:href="@{/role}" th:if="${isAdmin}" class="btn btn-primary">Админ панель</a>
+<a th:href="@{/main}" th:if="${isUser}" class="btn btn-primary">Главная страница</a>
 
 
 </body>

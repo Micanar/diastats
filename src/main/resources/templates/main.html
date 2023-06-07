@@ -8,78 +8,233 @@
     <div id="w" th:insert="fragments/boots :: sc2"></div>
     <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: url(https://html5book.ru/wp-content/uploads/2015/07/background39.png);
+        }
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-radius: 10px;
+            border-spacing: 0;
+            text-align: center;
+            width: 100%;
+
+
+        }
+        th {
+            background: rgba(167, 255, 195, 0.8);
+            color: #000000;
+            padding: 10px 20px;
+        }
+        th, td {
+            border-style: solid;
+            border-width: 0 1px 1px 0;
+            border-color: white;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+        }
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+        th:last-child {
+            border-top-right-radius: 10px;
+            border-right: none;
+        }
+        td {
+            padding: 10px 20px;
+
+        }
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+        tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        tr td:last-child {
+            border-right: none;
+        }
+
+        .red-row {
+            background-color: #e1a0b6;
+            color: white;
+        }
+
+        .blue-row {
+            background-color: #aea0e9;
+            color: white;
+        }
+
+        .default-row {
+            background-color: #aed3c2; /* Можно изменить на другой цвет по умолчанию */
+            color: black;
+        }
+
+        .bubbly-button {
+            font-family: "Helvetica", "Arial", sans-serif;
+            display: inline-block;
+            font-size: 1em;
+            padding: 1em 2em;
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: #41d9cd;
+            margin: 10px;
+            color: #fff;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+            box-shadow: 0 2px 25px rgba(65, 217, 205, 0.5);
+        }
+        .bubbly-button:focus {
+            outline: 0;
+        }
+        .bubbly-button:before, .bubbly-button:after {
+            position: absolute;
+            content: "";
+            display: block;
+            width: 140%;
+            height: 100%;
+            left: -20%;
+            z-index: -1000;
+            transition: all ease-in-out 0.5s;
+            background-repeat: no-repeat;
+        }
+        .bubbly-button:before {
+            display: none;
+            top: -75%;
+            background-image: radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 20%, #41d9cd 20%, transparent 30%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+            background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+        }
+        .bubbly-button:after {
+            display: none;
+            bottom: -75%;
+            background-image: radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 10%, #41d9cd 15%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+            background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+        }
+        .bubbly-button:active {
+            transform: scale(0.9);
+            background-color: rgba(65, 217, 205, 0.87);
+            box-shadow: 0 2px 25px rgba(65, 217, 205, 0.5);
+        }
+        .bubbly-button.animate:before {
+            display: block;
+            animation: topBubbles ease-in-out 0.75s forwards;
+        }
+        .bubbly-button.animate:after {
+            display: block;
+            animation: bottomBubbles ease-in-out 0.75s forwards;
+        }
+
+        @keyframes topBubbles {
+            0% {
+                background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+            }
+            50% {
+                background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+            }
+            100% {
+                background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+                background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+        }
+        @keyframes bottomBubbles {
+            0% {
+                background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+            }
+            50% {
+                background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+            }
+            100% {
+                background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+                background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+        }
+
+
+    </style>
 </head>
 
 
 <body>
-
-
-<div th:if="${errorMessage}" class="error-message">
-    <span th:text="${errorMessage}"></span>
-</div>
-
+<div style="width: 100%;">
 <p>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить показание сахара</a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Отфильтровать показания</button>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <div class="d-flex justify-content-between">
+                <button class="bubbly-button" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Добавить показание сахара</button>
+                <button class="bubbly-button" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Отфильтровать показания</button>
+            </div>
+        </div>
+    </div>
     </p>
-<div class="row">
-    <div class="col">
+<div class="row" >
+    <div class="col" >
         <div class="collapse multi-collapse" id="multiCollapseExample1">
-            <div class="card card-body">
+            <div class="card card-body" style="height: 350px; width: 100%; background-color: rgba(255,0,0,0.1); border: 1px solid #ff0000;">
                 <form method="post" th:action="@{/main}" >
                     <div class="form-group row">
-                        <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2">
-                        <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2">
+                        <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
+                        <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2"style="background-color: rgba(255,255,255,0.1);">
                         <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
     <div class="col">
         <div class="collapse multi-collapse" id="multiCollapseExample2">
-            <div class="card card-body">
-                <form method="get" th:action="@{/main}" class="form-inline">
+            <div class="card card-body" style="height: 350px; width: 100%; background-color: rgba(0, 0, 255, 0.1); border: 1px solid blue;">
+                <form method="get" th:action="@{/main}">
                     <div class="form-group row">
-
-                            <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2">
-
-
-                            <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2">
-
-                        <button type="submit" class="btn btn-outline-primary mt-4">Фильтровать</button>
+                        <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
+                        <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
+                        <button type="submit" class="btn btn-outline-primary mt-4 w-100">Фильтровать</button>
                     </div>
                 </form>
             </div>
-
+        </div>
     </div>
-        <span th:text="${attention1}" style="color: red; font-size: 20px; font-weight: bold;"></span>
-        <br>
-        <span th:text="${attention}" style="color: red; font-size: 20px; font-weight: bold;"></span>
 
-        <div>Среднее значение сахара первого дня: <span th:text="${formattedAverageSugarFirstDay}"></span></div>
-</div>
-    <div id="chartContainer" style="width: 300px; height: 300px;">
+    <div id="chartContainer" style="width: 400px; height: 400px;">
         <canvas id="myChart" style="width: 100%; height: 100%;"></canvas>
     </div>
+</div>
+    <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >Среднее значение сахара первого дня: <span th:text="${formattedAverageSugarFirstDay}"></span></div>
+
+    <div class="alert alert-danger" th:if="${attention1}">
+        <span th:text="${attention1}"   ></span>
+    </div>
+    <br>
+    <div class="alert alert-danger" th:if="${attention}" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
+        <span th:text="${attention}"  style="font-size: 22px; "></span>
+    </div>
+
 
 
     <div>Список измерений сахаров у больного</div>
+    <div th:if="${errorMessage}" class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
+        <span th:text="${errorMessage}"  style="font-size: 22px; "></span>
+    </div>
 
-    <table class="table">
-        <thead class="thead-dark">
+    <table>
+
         <tr>
-            <th scope="col">Дата и время</th>
-            <th scope="col">Сахар</th>
-            <th scope="col">ID</th>
-            <th scope="col">Имя пользователя</th>
+            <th >Дата и время</th>
+            <th >Сахар</th>
+            <th>ID</th>
+            <th >Имя пользователя</th>
         </tr>
-        </thead>
+
         <tbody>
         <tr th:if="${sugars == null or sugars.empty}">
             <td colspan="4">У вас нет измерений сахара</td>
         </tr>
-        <tr th:each="sugar : ${sugars}">
+        <tr th:each="sugar : ${sugars}" th:class="${sugar.sugar > 8.3 ? 'red-row' : (sugar.sugar < 4 ? 'blue-row' : 'default-row')}">
             <td><span th:text="${sugar.dateTime.format(dateTimeFormatter)}">Дата и время</span></td>
             <td><span th:text="${sugar.sugar}">Сахар</span></td>
             <td><span th:text="${sugar.id}">ID</span></td>
@@ -113,13 +268,33 @@
             labels: ['Низкий уровень глюкозы', 'Средний уровень глюкозы', 'Высокий уровень глюкозы'],
             datasets: [{
                 data: [lowSugarCount, mediumSugarCount, highSugarCount],
-                backgroundColor: ['blue', 'green', 'red']
+                backgroundColor: ['rgba(27,0,255,0.46)', 'rgba(80,255,0,0.46)', 'rgba(255,0,0,0.46)']
             }]
         },
         options: {
             responsive: true
         }
     });
+</script>
+
+<script>
+    var animateButton = function(e) {
+
+        e.preventDefault;
+        //reset animation
+        e.target.classList.remove('animate');
+
+        e.target.classList.add('animate');
+        setTimeout(function(){
+            e.target.classList.remove('animate');
+        },700);
+    };
+
+    var bubblyButtons = document.getElementsByClassName("bubbly-button");
+
+    for (var i = 0; i < bubblyButtons.length; i++) {
+        bubblyButtons[i].addEventListener('click', animateButton, false);
+    }
 </script>
 </body>
 </html>

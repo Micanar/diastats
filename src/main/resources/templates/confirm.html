@@ -2,17 +2,78 @@
 <html>
 <head>
   <title>Confirm Registration</title>
+  <head>
+    <title>Spring Security Example </title>
+    <div id="script" th:insert="fragments/boots :: sc"></div>
+    <div id="q" th:insert="fragments/boots :: trap"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <div id="w" th:insert="fragments/boots :: sc2"></div>
+      <style>
+        body {
+          background: url(https://html5book.ru/wp-content/uploads/2015/07/background39.png);
+        }
+      .floating-button {
+        text-decoration: none;
+        display: inline-block;
+        width: 200px;
+        height: 45px;
+        line-height: 30px;
+        border-radius: 45px;
+      margin-top: 10px;
+
+
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: 3px;
+        font-weight: 600;
+        color: #524f4e;
+        background: white;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
+        transition: .3s;
+      }
+      .floating-button:hover {
+        background: #128ff2;
+        box-shadow: 0 15px 20px rgba(46, 157, 229, .4);
+        color: white;
+        transform: translateY(-7px);
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+
+      }
+
+      .form-wrapper {
+        max-width: 800px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    </style>
+
+  </head>
 </head>
 <body>
-<h1>Confirm Registration</h1>
-<form th:action="@{/confirm}" method="post">
-  <input type="hidden" name="username" value="${user.username}" />
-  <label for="confirmationCode">Confirmation Code:</label>
-  <input type="text" id="confirmationCode" name="confirmationCode" required />
-  <button type="submit">Confirm</button>
-</form>
-<div th:if="${message}" class="error-message">
-  <span th:text="${message}"></span>
+<div class="container">
+<div class="form-wrapper text-center">
+  <h3 class="text-center">Подтверждение регистрации</h3>
+  <div th:if="${message}" class="alert alert-danger">
+    <span th:text="${message}"></span>
+  </div>
+  <form th:action="@{/confirm}" method="post">
+    <input type="hidden" name="username" value="${user.username}" />
+    <label class="col-sm-3 col-form-label text-center">Код подтверждения:</label>
+    <div class="col-sm-12 text-center">
+      <input type="text" id="confirmationCode" name="confirmationCode" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary floating-button">Отправить</button>
+  </form>
+</div>
 </div>
 </body>
 </html>

@@ -50,9 +50,13 @@ public class MainController {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("ADMIN"));
 
+        boolean isUser = authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("USER"));
+
         // Передаем флаг в модель
         model.addAttribute("isDoctor", isDoctor);
         model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isUser", isUser);
 
         return "hello";
     }

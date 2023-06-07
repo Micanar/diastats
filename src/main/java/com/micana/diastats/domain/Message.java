@@ -1,6 +1,7 @@
 package com.micana.diastats.domain;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Message {
@@ -18,7 +19,18 @@ public class Message {
 
     private String content;
 
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
+
     public Message() {
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Long getId() {
