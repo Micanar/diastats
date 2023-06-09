@@ -206,7 +206,7 @@
 </div>
     <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >Среднее значение сахара первого дня: <span th:text="${formattedAverageSugarFirstDay}"></span></div>
 
-    <div class="alert alert-danger" th:if="${attention1}">
+    <div class="alert alert-danger" th:if="${attention1}" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
         <span th:text="${attention1}"   ></span>
     </div>
     <br>
@@ -216,7 +216,7 @@
 
 
 
-    <div>Список измерений сахаров у больного</div>
+    <h1 style="text-align: center">Список измерений сахаров у больного</h1>
     <div th:if="${errorMessage}" class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
         <span th:text="${errorMessage}"  style="font-size: 22px; "></span>
     </div>
