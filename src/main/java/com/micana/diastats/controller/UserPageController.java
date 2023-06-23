@@ -1,11 +1,7 @@
 package com.micana.diastats.controller;
 
-import com.micana.diastats.domain.Analysis;
-import com.micana.diastats.domain.User;
-import com.micana.diastats.domain.UserProfile;
-import com.micana.diastats.repos.AnalysisRepo;
-import com.micana.diastats.repos.UserProfileRepository;
-import com.micana.diastats.repos.UserRepo;
+import com.micana.diastats.domain.*;
+import com.micana.diastats.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +22,24 @@ public class UserPageController {
 
     @Autowired
     private AnalysisRepo analysisRepository;
+    @Autowired
+    GlycHemoRepo glycHemoRepo;
+    @Autowired
+    FatRepo fatRepo;
+    @Autowired
+    InsulinRepo insulinRepo;
+    @Autowired
+    BloodAnalysRepo bloodAnalysRepo;
+    @Autowired
+    UreaAnalysRepo ureaAnalysRepo;
+    @Autowired
+    CreatinineRepo creatinineRepo;
+    @Autowired
+    UreaRepo ureaRepo;
+    @Autowired
+    UricAcidRepo uricAcidRepo;
+    @Autowired
+    HepaticRepo hepaticRepo;
 
 
 
@@ -33,7 +47,26 @@ public class UserPageController {
     public String showUserProfile(Model model, @AuthenticationPrincipal User user) {
         // Получение профиля пользователя из репозитория
         UserProfile userProfile = userProfileRepository.findByUser(user);
+        Iterable<GlycatedHemoglobinAnalys> glycatedHemoglobinAnalys = glycHemoRepo.findByPatient(user);
+        Iterable<BloodAnalysis> bloodAnalyses = bloodAnalysRepo.findByPatient(user);
+        Iterable<Creatinine> creatinines = creatinineRepo.findByPatient(user);
+        Iterable<FatMetabolismIndicators> fatMetabolismIndicators = fatRepo.findByPatient(user);
+        Iterable<HepaticIndicators> hepaticIndicators = hepaticRepo.findByPatient(user);
+        Iterable<InsulinSynthesis> insulinSyntheses = insulinRepo.findByPatient(user);
+        Iterable<UrineAnalysis> urineAnalyses = ureaAnalysRepo.findByPatient(user);
         Iterable<Analysis> analysis = analysisRepository.findByPatient(user);
+        Iterable<UreaAnalys> ureaAnalys = ureaRepo.findByPatient(user);
+        Iterable<UricAcidAnalys> uricAcidAnalys = uricAcidRepo.findByPatient(user);
+        model.addAttribute("glycatedHemoglobinAnalys", glycatedHemoglobinAnalys);
+        model.addAttribute("creatinines", creatinines);
+        model.addAttribute("bloodAnalyses", bloodAnalyses);
+        model.addAttribute("fatMetabolismIndicators", fatMetabolismIndicators);
+        model.addAttribute("hepaticIndicators", hepaticIndicators);
+        model.addAttribute("insulinSyntheses", insulinSyntheses);
+        model.addAttribute("urineAnalyses", urineAnalyses);
+        model.addAttribute("ureaAnalys", ureaAnalys);
+        model.addAttribute("uricAcidAnalys", uricAcidAnalys);
+
 
         if (userProfile == null) {
             // Если профиль пользователя не найден, создаем новый профиль

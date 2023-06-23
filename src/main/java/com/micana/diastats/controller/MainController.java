@@ -192,7 +192,7 @@ public class MainController {
 
 
     @PostMapping("/main")
-    public String add(@AuthenticationPrincipal User user, @RequestParam String sugar, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTime, Model model) {
+    public String add(@AuthenticationPrincipal User user, @RequestParam String sugar, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTime,@RequestParam String comment, Model model) {
         double sugarValue;
         try {
             sugarValue = Double.parseDouble(sugar);
@@ -200,7 +200,7 @@ public class MainController {
             model.addAttribute("errorMessage", "Invalid sugar value. Please enter a valid number.");
             return "main";
         }
-        Blood_sugar blood_sugar = new Blood_sugar(sugarValue, dateTime, user);
+        Blood_sugar blood_sugar = new Blood_sugar(sugarValue, dateTime,comment, user);
 
         bloodRepo.save(blood_sugar);
 

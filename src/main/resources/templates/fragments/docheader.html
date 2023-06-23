@@ -8,4 +8,10 @@
   <form th:action="@{/users/{userId}/chart(userId=${user.id})}" method="get">
     <button type="submit" class="btn btn-outline-danger mt-4">Посмотреть график сахаров</button>
   </form>
+  <form th:action="@{/users/{userId}/profile(userId=${user.id})}" method="get">
+    <button type="submit" class="btn btn-outline-danger mt-4">Посмотреть профиль пациента</button>
+  </form>
+  <form th:action="@{/users/{userId}/chat(userId=${user.id})}" method="get">
+    <button type="submit" class="btn btn-outline-danger mt-4">Чат с пациентом</button>
+  </form>
 </nav>

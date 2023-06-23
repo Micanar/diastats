@@ -1,12 +1,7 @@
 package com.micana.diastats.controller;
 
-import com.micana.diastats.domain.Blood_sugar;
-import com.micana.diastats.domain.ProductConsumption;
-import com.micana.diastats.domain.User;
-import com.micana.diastats.repos.BloodRepo;
-import com.micana.diastats.repos.BloodSugarSortingService;
-import com.micana.diastats.repos.ProductConsumptionRepository;
-import com.micana.diastats.repos.UserRepo;
+import com.micana.diastats.domain.*;
+import com.micana.diastats.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +26,30 @@ import java.util.stream.StreamSupport;
 public class UserController {
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private AnalysisRepo analysisRepository;
+    @Autowired
+    GlycHemoRepo glycHemoRepo;
+    @Autowired
+    FatRepo fatRepo;
+    @Autowired
+    InsulinRepo insulinRepo;
+    @Autowired
+    BloodAnalysRepo bloodAnalysRepo;
+    @Autowired
+    UreaAnalysRepo ureaAnalysRepo;
+    @Autowired
+    CreatinineRepo creatinineRepo;
+    @Autowired
+    UreaRepo ureaRepo;
+    @Autowired
+    UricAcidRepo uricAcidRepo;
+    @Autowired
+    HepaticRepo hepaticRepo;
 
     @Autowired
     private BloodRepo bloodSugarRepository;
@@ -256,4 +276,58 @@ public class UserController {
     }
 
 
+    @GetMapping("/users/{userId}/profile")
+    public String viewUserNutrition(@PathVariable Long userId, Model model, Principal principal){
+        User user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
+        UserProfile userProfile = userProfileRepository.findByUser(user);
+        Iterable<GlycatedHemoglobinAnalys> glycatedHemoglobinAnalys = glycHemoRepo.findByPatient(user);
+        Iterable<BloodAnalysis> bloodAnalyses = bloodAnalysRepo.findByPatient(user);
+        Iterable<Creatinine> creatinines = creatinineRepo.findByPatient(user);
+        Iterable<FatMetabolismIndicators> fatMetabolismIndicators = fatRepo.findByPatient(user);
+        Iterable<HepaticIndicators> hepaticIndicators = hepaticRepo.findByPatient(user);
+        Iterable<InsulinSynthesis> insulinSyntheses = insulinRepo.findByPatient(user);
+        Iterable<UrineAnalysis> urineAnalyses = ureaAnalysRepo.findByPatient(user);
+        Iterable<Analysis> analysis = analysisRepository.findByPatient(user);
+        Iterable<UreaAnalys> ureaAnalys = ureaRepo.findByPatient(user);
+        Iterable<UricAcidAnalys> uricAcidAnalys = uricAcidRepo.findByPatient(user);
+        model.addAttribute("glycatedHemoglobinAnalys", glycatedHemoglobinAnalys);
+        model.addAttribute("creatinines", creatinines);
+        model.addAttribute("bloodAnalyses", bloodAnalyses);
+        model.addAttribute("fatMetabolismIndicators", fatMetabolismIndicators);
+        model.addAttribute("hepaticIndicators", hepaticIndicators);
+        model.addAttribute("insulinSyntheses", insulinSyntheses);
+        model.addAttribute("urineAnalyses", urineAnalyses);
+        model.addAttribute("ureaAnalys", ureaAnalys);
+        model.addAttribute("uricAcidAnalys", uricAcidAnalys);
+
+
+        if (userProfile == null) {
+            // Если профиль пользователя не найден, создаем новый профиль
+            userProfile = new UserProfile();
+            userProfile.setUser(user);
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate birthdate = userProfile.getBirthdate();
+        int age;
+        if (birthdate != null) {
+            Period period = Period.between(birthdate, currentDate);
+            age = period.getYears();
+            // Дальнейшая обработка возраста
+        } else {
+            age=0;
+            // Обработка случая, когда birthdate равно null
+
+        }
+
+        model.addAttribute("age", age);
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        model.addAttribute("dateTimeFormatter", formatter);
+        model.addAttribute("analysis", analysis);
+        // Передача информации о пользователе в модель
+        model.addAttribute("userProfile", userProfile);
+        return "patientProfile";
+    }
 }

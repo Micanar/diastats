@@ -21,6 +21,64 @@
         /**
         * Components
         */
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-radius: 10px;
+            border-spacing: 0;
+            text-align: center;
+            width: 100%;
+
+
+        }
+        th {
+            background: rgba(167, 255, 195, 0.8);
+            color: #000000;
+            padding: 10px 20px;
+        }
+        th, td {
+            border-style: solid;
+            border-width: 0 1px 1px 0;
+            border-color: white;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+        }
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+        th:last-child {
+            border-top-right-radius: 10px;
+            border-right: none;
+        }
+        td {
+            padding: 10px 20px;
+
+        }
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+        tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        tr td:last-child {
+            border-right: none;
+        }
+
+        .red-row {
+            background-color: #e1a0b6;
+            color: white;
+        }
+
+        .blue-row {
+            background-color: #aea0e9;
+            color: white;
+        }
+
+        .default-row {
+            background-color: #aed3c2; /* Можно изменить на другой цвет по умолчанию */
+            color: black;
+        }
         .counter {
             margin-bottom:1rem;
             border-bottom:.1875em dashed #d2d6dd;
@@ -218,7 +276,7 @@
                             <input type="date" name="startDate" placeholder="Дата начала" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
                     <label for="dateTime">Дата окончания:</label>
                             <input type="date" name="endDate" placeholder="Дата окончания" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
-                    <button type="submit" class="btn btn-outline-primary mt-4 w-100">Фильтровать</button>
+                        <button type="submit" class="btn btn-outline-primary mt-4 w-100">Фильтровать</button>
                 </form>
             </div>
         </div>
@@ -235,26 +293,35 @@
     <div style="flex: 1;">
         <!-- Вывод суммарного потребления простых и сложных углеводов -->
         <p>
-            <span style="text-align: right;">Суммарное потребление простых углеводов за день:</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >
+            <span >Суммарное потребление простых углеводов за день:</span>
             <span th:text="${simpleCarbohydratesSum}"></span>
+    </div>
         </p>
         <p>
-            <span style="text-align: right;">Суммарное потребление сложных углеводов за день :</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >
+            <span >Суммарное потребление сложных углеводов за день :</span>
             <span th:text="${complexCarbohydratesSum}"></span>
+    </div>
         </p>
+
 
         <!-- Вывод процента сложных углеводов от общего количества углеводов -->
         <p>
-            <span style="text-align: right;">Процент сложных углеводов:</span>
-            <span th:text="${complexCarbohydratesPercentage}"></span>%
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >
+            <span >Процент сложных углеводов:</span>
+            <span th:text="${complexCarbohydratesPercentage}"></span>
+    </div>
         </p>
 
 
 
         <!-- Вывод общего количества хлебных единиц -->
         <p>
-            <span style="text-align: right;">Общее потребление хлебных единиц за день :</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >
+            <span >Общее потребление хлебных единиц за день :</span>
             <span th:text="${totalBreadUnits}"></span>
+    </div>
         </p>
 
         <!-- Предупреждение, если процент сложных углеводов меньше 80% -->
@@ -263,11 +330,11 @@
         </div>
 
         <!-- Предупреждение, если общее количество хлебных единиц превышает 20 -->
-        <div th:if="${exceedsBreadUnitsLimit}">
+        <div th:if="${exceedsBreadUnitsLimit}" class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
             <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Общее количество хлебных единиц за день превышает 20, пожалуйста старайтесь употреблять меньше углеводов в пище.</p>
         </div>
 
-        <div th:if="${overBreadUnits}">
+        <div th:if="${overBreadUnits}" class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
             <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Обнаружено большое количество съеденных углеводов за один приём пищи, пожалуйста старайтесь не употреблять такое количество углеводов за один раз.</p>
         </div>
 
@@ -282,9 +349,9 @@
 <h1>Дневник питания</h1>
 </div>
 </div>
-<table class="table">
-    <thead class="thead-dark">
-    <tr>
+<table >
+
+     <tr >
         <th scope="col">Наименование продукта</th>
         <th scope="col">Граммы</th>
         <th scope="col">Углеводы</th>
@@ -292,8 +359,8 @@
         <th  scope="col">Тип углеводов</th>
         <th  scope="col">Дата и время</th>
     </tr>
-    </thead>
-    <tr th:each="consumption : ${consumptions}">
+  
+    <tr th:each="consumption : ${consumptions}" th:class="${consumption.carbohydrateType == 'Простой' ? 'red-row' : 'default-row'}">
         <td th:text="${consumption.name}"></td>
         <td th:text="${consumption.grams}"></td>
         <td th:text="${consumption.carbohydrates}"></td>
@@ -309,7 +376,7 @@
         var counter = document.querySelector('.counter');
         var diner = document.querySelector('h1');
         var menu = ['🍔', '🌭', '🍕', '🍗', '🌮', '🍔'];
-        var noms = ['Пошел нахуй', 'Пидорас', 'Сын проститутки', 'Твою маму ебал', 'Сиську царапал'];
+        var noms = ['Углеводы', 'Белки', 'Жиры', 'Каллории', 'Хлебные единицы'];
         var finished = 0;
 
         function jelly(e) {

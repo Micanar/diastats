@@ -179,6 +179,7 @@
                     <div class="form-group row">
                         <input type="text" name="sugar" placeholder="Введите сахар" class="form-control mt-2" style="background-color: rgba(255,255,255,0.1);">
                         <input type="datetime-local" name="dateTime" placeholder="Дата" class="form-control mt-2"style="background-color: rgba(255,255,255,0.1);">
+                        <input type="text" name="comment" placeholder="Добавьте комментарий" class="form-control mt-2"style="background-color: rgba(255,255,255,0.1);">
                         <button type="submit" class="btn btn-outline-danger mt-4" >Добавить</button>
                     </div>
                 </form>
@@ -207,7 +208,7 @@
     <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; " >Среднее значение сахара первого дня: <span th:text="${formattedAverageSugarFirstDay}"></span></div>
 
     <div class="alert alert-danger" th:if="${attention1}" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
-        <span th:text="${attention1}"   ></span>
+        <span th:text="${attention1}"  style="font-size: 22px;" ></span>
     </div>
     <br>
     <div class="alert alert-danger" th:if="${attention}" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;">
@@ -228,6 +229,7 @@
             <th >Сахар</th>
             <th>ID</th>
             <th >Имя пользователя</th>
+            <th>Комментарии</th>
         </tr>
 
         <tbody>
@@ -239,6 +241,7 @@
             <td><span th:text="${sugar.sugar}">Сахар</span></td>
             <td><span th:text="${sugar.id}">ID</span></td>
             <td><span th:text="${sugar.patientName}">Имя пользователя</span></td>
+            <td><span th:text="${sugar.comment}">Имя пользователя</span></td>
         </tr>
         </tbody>
     </table>

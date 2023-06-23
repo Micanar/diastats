@@ -351,47 +351,6 @@
 <p>Возраст: <span th:text="${age}"></span> лет</p>
 <p>Дата рождения: <span th:if="${userProfile.birthdate != null}" th:text="${userProfile.birthdate.format(dateTimeFormatter)}"></span></p>
 <p>Индекс массы тела: <span th:text="${userProfile.bmi}"></span></p>
-<button class="bubbly-button" onclick="window.location.href='/analysis/form'">Добавить анализ</button>
-
-<!-- Форма для обновления профиля пользователя -->
-<form method="post"  th:action="@{/profile}"  class="form-inline">
-  <div class="row">
-    <div class="col d-flex justify-content-center">
-      <div class="d-flex justify-content-between">
-        <button class="bubbly-button" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Изменить данные</button>
-
-         </div>
-    </div>
-  </div>
-  </p>
-  <div class="row">
-    <div class="col">
-      <div class="collapse multi-collapse" id="multiCollapseExample1">
-        <div class="card card-body" style=" background-color: rgba(255,0,0,0.1); border: 1px solid #ff0000;">
-          <h2>Изменить данные</h2>
-
-          <label for="height">Рост (в см):</label>
-          <input type="text" class="form-control mt-2 w-100" id="height" name="height"  required><br><br>
-          <label for="weight">Вес (в кг):</label>
-          <input type="text"  class="form-control mt-2 w-100"id="weight" name="weight" required><br><br>
-          <label for="gender"  >Пол:</label>
-          <select id="gender"  class="form-select" name="gender">
-            <option value="Мужской" th:selected="${userProfile.gender == 'Мужской'}">Мужской</option>
-            <option value="Женский" th:selected="${userProfile.gender == 'Женский'}">Женский</option>
-          </select><br><br>
-          <label for="birthDate">Дата рождения:</label>
-          <input type="date"  class="form-control mt-2" id="birthDate" name="birthDate" th:value="${userProfile.birthdate}" required><br><br>
-          <button type="submit" class="btn btn-outline-primary mt-4 w-100">Сохранить</button>
-        </div>
-      </div>
-    </div>
-
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
 <h1>Анализы</h1>
 
@@ -422,11 +381,11 @@
         <span th:text="${creatin.dateAnalysis.format(dateTimeFormatter)}"></span>
       </div>
 
-        <div  th:each="glic : ${glycatedHemoglobinAnalys}" class="col-auto box alizarin " >
-          <h3>Гликированный гемоглобин</h3>
-            <p>Гликированный гемоглобин: <span th:text="${glic.glycatedHemoglobin}"></span></p>
-          <span th:text="${glic.dateAnalysis.format(dateTimeFormatter)}"></span>
-          </div>
+      <div  th:each="glic : ${glycatedHemoglobinAnalys}" class="col-auto box alizarin " >
+        <h3>Гликированный гемоглобин</h3>
+        <p>Гликированный гемоглобин: <span th:text="${glic.glycatedHemoglobin}"></span></p>
+        <span th:text="${glic.dateAnalysis.format(dateTimeFormatter)}"></span>
+      </div>
 
       <div  th:each="hep : ${hepaticIndicators}" class="col-auto box belizehole " >
 
@@ -450,44 +409,44 @@
       </div>
 
       <div  th:each="ins : ${insulinSyntheses}" class="col-auto box wisteria " >
-          <h3>Система собственного синтеза инсулина</h3>
-          <p>C-ПЕПТИД: <span th:text="${ins.cPeptide}"></span></p>
-          <p>Проинсулин: <span th:text="${ins.proinsulin}"></span></p>
-          <p>Инсулин: <span th:text="${ins.insulin}"></span></p>
+        <h3>Система собственного синтеза инсулина</h3>
+        <p>C-ПЕПТИД: <span th:text="${ins.cPeptide}"></span></p>
+        <p>Проинсулин: <span th:text="${ins.proinsulin}"></span></p>
+        <p>Инсулин: <span th:text="${ins.insulin}"></span></p>
         <span th:text="${ins.dateAnalysis.format(dateTimeFormatter)}"></span>
-        </div>
+      </div>
       <div  th:each="blood : ${bloodAnalyses}" class="col-auto box alizarin " >
-          <h3>Общий анализ крови</h3>
-          <p>Гемоглобин: <span th:text="${blood.hemoglobin}"></span></p>
-          <p>Лейкоциты: <span th:text="${blood.leukocytes}"></span></p>
-          <p>Скорость оседания лейкоцитов: <span th:text="${blood.erythrocyteSedimentationRate}"></span></p>
+        <h3>Общий анализ крови</h3>
+        <p>Гемоглобин: <span th:text="${blood.hemoglobin}"></span></p>
+        <p>Лейкоциты: <span th:text="${blood.leukocytes}"></span></p>
+        <p>Скорость оседания лейкоцитов: <span th:text="${blood.erythrocyteSedimentationRate}"></span></p>
         <span th:text="${blood.dateAnalysis.format(dateTimeFormatter)}"></span>
-        </div>
-
-      <div  th:each="urine : ${urineAnalyses}" class="col-auto box sunflower " >
-          <h3>Общий анализ мочи</h3>
-          <p>Удельный вес мочи: <span th:text="${urine.specificGravity}"></span></p>
-          <p>Глюкоза: <span th:text="${urine.glucose}"></span></p>
-          <p>Лейкоциты: <span th:text="${urine.urineLeukocytes}"></span></p>
-          <p>Белок: <span th:text="${urine.protein}"></span></p>
-          <p>Эритроциты: <span th:text="${urine.urineErythrocytes}"></span></p>
-          <p>Бактерии: <span th:text="${urine.bacteria}"></span></p>
-        <span th:text="${urine.dateAnalysis.format(dateTimeFormatter)}"></span>
-        </div>
-      <div  th:each="ur : ${ureaAnalys}" class="col-auto box sunflower " >
-        <h3>Мочевина</h3>
-          <p>Мочевина: <span th:text="${ur.urea}"></span></p>
-        <span th:text="${ur.dateAnalysis.format(dateTimeFormatter)}"></span>
-        </div>
-      <div  th:each="uricAcid : ${uricAcidAnalys}" class="col-auto box sunflower " >
-        <h3>Мочевая кислота</h3>
-          <p>Мочевая кислота: <span th:text="${uricAcid.uricAcid}"></span></p>
-        <span th:text="${uricAcid.dateAnalysis.format(dateTimeFormatter)}"></span>
-        </div>
       </div>
 
+      <div  th:each="urine : ${urineAnalyses}" class="col-auto box sunflower " >
+        <h3>Общий анализ мочи</h3>
+        <p>Удельный вес мочи: <span th:text="${urine.specificGravity}"></span></p>
+        <p>Глюкоза: <span th:text="${urine.glucose}"></span></p>
+        <p>Лейкоциты: <span th:text="${urine.urineLeukocytes}"></span></p>
+        <p>Белок: <span th:text="${urine.protein}"></span></p>
+        <p>Эритроциты: <span th:text="${urine.urineErythrocytes}"></span></p>
+        <p>Бактерии: <span th:text="${urine.bacteria}"></span></p>
+        <span th:text="${urine.dateAnalysis.format(dateTimeFormatter)}"></span>
+      </div>
+      <div  th:each="ur : ${ureaAnalys}" class="col-auto box sunflower " >
+        <h3>Мочевина</h3>
+        <p>Мочевина: <span th:text="${ur.urea}"></span></p>
+        <span th:text="${ur.dateAnalysis.format(dateTimeFormatter)}"></span>
+      </div>
+      <div  th:each="uricAcid : ${uricAcidAnalys}" class="col-auto box sunflower " >
+        <h3>Мочевая кислота</h3>
+        <p>Мочевая кислота: <span th:text="${uricAcid.uricAcid}"></span></p>
+        <span th:text="${uricAcid.dateAnalysis.format(dateTimeFormatter)}"></span>
+      </div>
     </div>
+
   </div>
+</div>
 </div>
 
 </body>

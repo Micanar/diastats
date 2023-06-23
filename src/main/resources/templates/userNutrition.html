@@ -9,6 +9,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <div id="e" th:insert="fragments/docheader :: dochd"></div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: url(https://html5book.ru/wp-content/uploads/2015/07/background39.png);
+    }
+    h1 {
+      font-family:'American Typewriter', 'Rockwell Extra Bold', 'Book Antiqua', Georgia, serif;
+      font-size:4em;
+    }
+
+    /**
+    * Components
+    */
+    table {
+      font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+      font-size: 14px;
+      border-radius: 10px;
+      border-spacing: 0;
+      text-align: center;
+      width: 100%;
+
+
+    }
+    th {
+      background: rgba(167, 255, 195, 0.8);
+      color: #000000;
+      padding: 10px 20px;
+    }
+    th, td {
+      border-style: solid;
+      border-width: 0 1px 1px 0;
+      border-color: white;
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    th:first-child {
+      border-top-left-radius: 10px;
+    }
+    th:last-child {
+      border-top-right-radius: 10px;
+      border-right: none;
+    }
+    td {
+      padding: 10px 20px;
+
+    }
+    tr:last-child td:first-child {
+      border-radius: 0 0 0 10px;
+    }
+    tr:last-child td:last-child {
+      border-radius: 0 0 10px 0;
+    }
+    tr td:last-child {
+      border-right: none;
+    }
+
+    .red-row {
+      background-color: #e1a0b6;
+      color: white;
+    }
+
+    .blue-row {
+      background-color: #aea0e9;
+      color: white;
+    }
+
+    .default-row {
+      background-color: #aed3c2; /* Можно изменить на другой цвет по умолчанию */
+      color: black;
+    }
+    .counter {
+      margin-bottom:1rem;
+      border-bottom:.1875em dashed #d2d6dd;
+    }
+
+    .tagline {
+      font-size:1.125em;
+      margin:2rem 1.5rem;
+    }
+
+    .calories {
+      color:#8b919b;
+      font-size:.875em;
+    }
+
+    .splash {
+      position: relative;
+      height:100vh;
+      max-width:30em;
+      text-align:center;
+    }
+
+    .splash {
+      box-sizing:border-box;
+      max-width:30em;
+      margin:0 auto;
+      padding:1.5em;
+    }
+
+
+    /**
+    * Header animation
+    */
+    .counter {
+      position:relative;
+    }
+
+    .counter h1 {
+      position:relative;
+      text-align:center;
+      margin:0;
+      line-height: .625;
+      z-index:2;
+      transform-origin: bottom center;
+    }
+
+    .dish {
+      color:#e89c2b;
+      position:absolute;
+      width:1em;
+      height:1em;
+      margin-top: -50vh;
+      margin-left:-.5em;
+      font-size:2rem;
+      top:0;
+      transform:translateY(-3em);
+      transition-duration:.75s;
+      transition-timing-function:ease-in;
+      transition-property:transform;
+      z-index:1;
+    }
+
+    .dish.drop {
+      transform:translateY(40vh);
+    }
+
+    .nommer {
+      position:absolute;
+      bottom:2em;
+      margin-left:-1em;
+      color:rgba(0,0,0,.5);
+      font-size:1.5rem;
+      transform-origin:bottom center;
+    }
+
+    .bubbly-button {
+      font-family: "Helvetica", "Arial", sans-serif;
+      display: inline-block;
+      font-size: 1em;
+      padding: 1em 2em;
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #41d9cd;
+      margin: 10px;
+      color: #fff;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+      box-shadow: 0 2px 25px rgba(65, 217, 205, 0.5);
+    }
+    .bubbly-button:focus {
+      outline: 0;
+    }
+    .bubbly-button:before, .bubbly-button:after {
+      position: absolute;
+      content: "";
+      display: block;
+      width: 140%;
+      height: 100%;
+      left: -20%;
+      z-index: -1000;
+      transition: all ease-in-out 0.5s;
+      background-repeat: no-repeat;
+    }
+    .bubbly-button:before {
+      display: none;
+      top: -75%;
+      background-image: radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 20%, #41d9cd 20%, transparent 30%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+      background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+    }
+    .bubbly-button:after {
+      display: none;
+      bottom: -75%;
+      background-image: radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, transparent 10%, #41d9cd 15%, transparent 20%), radial-gradient(circle, #41d9cd 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+      background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+    }
+    .bubbly-button:active {
+      transform: scale(0.9);
+      background-color: rgba(65, 217, 205, 0.87);
+      box-shadow: 0 2px 25px rgba(65, 217, 205, 0.5);
+    }
+    .bubbly-button.animate:before {
+      display: block;
+      animation: topBubbles ease-in-out 0.75s forwards;
+    }
+    .bubbly-button.animate:after {
+      display: block;
+      animation: bottomBubbles ease-in-out 0.75s forwards;
+    }
+
+    @keyframes topBubbles {
+      0% {
+        background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+      }
+      50% {
+        background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+      }
+      100% {
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+      }
+    }
+    @keyframes bottomBubbles {
+      0% {
+        background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+      }
+      50% {
+        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+      }
+      100% {
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -16,7 +243,7 @@
 <h2>Пациент: <span th:text="${user.username}"></span></h2>
 
 <p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Фильтровать показатели</a>
+  <button class="bubbly-button" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Фильтровать показатели</button>
   </p>
 <div class="row">
   <div class="col">
@@ -43,40 +270,44 @@
     <div style="flex: 1;">
       <!-- Вывод суммарного потребления простых и сложных углеводов -->
       <p>
-        <span style="text-align: right;">Суммарное потребление простых углеводов за день:</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; ">Суммарное потребление простых углеводов за день:
         <span th:text="${simpleCarbohydratesSum}"></span>
+    </div>
       </p>
       <p>
-        <span style="text-align: right;">Суммарное потребление сложных углеводов за день :</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; ">Суммарное потребление сложных углеводов за день :
         <span th:text="${complexCarbohydratesSum}"></span>
+    </div>
       </p>
 
       <!-- Вывод процента сложных углеводов от общего количества углеводов -->
       <p>
-        <span style="text-align: right;">Процент сложных углеводов:</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; ">Процент сложных углеводов:
         <span th:text="${complexCarbohydratesPercentage}"></span>%
+    </div>
       </p>
 
 
 
       <!-- Вывод общего количества хлебных единиц -->
       <p>
-        <span style="text-align: right;">Общее потребление хлебных единиц за день :</span>
+        <div class="alert alert-info" style="font-size: 22px;width: 80%;height: 100px;text-align: center; margin: 10px auto; ">Общее потребление хлебных единиц за день :
         <span th:text="${totalBreadUnits}"></span>
+    </div>
       </p>
 
       <!-- Предупреждение, если процент сложных углеводов меньше 80% -->
-      <div th:if="${complexCarbohydratesPercentage &lt; 80}">
-        <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Количество сложных углеводов меньше 80% от общего количества углеводов, проконсультируйте пациента по поводу соотношения простых к сложным углеводам.</p>
+      <div  class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;" th:if="${complexCarbohydratesPercentage &lt; 80}">
+        <p >Внимание! Количество сложных углеводов меньше 80% от общего количества углеводов, проконсультируйте пациента по поводу соотношения простых к сложным углеводам.</p>
       </div>
 
       <!-- Предупреждение, если общее количество хлебных единиц превышает 20 -->
-      <div th:if="${exceedsBreadUnitsLimit}">
-        <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Общее количество хлебных единиц за день превышает 20, проконсультируйте пациента насчёт нормы углеводов за день.</p>
+      <div  class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;" th:if="${exceedsBreadUnitsLimit}">
+        <p >Внимание! Общее количество хлебных единиц за день превышает 20, проконсультируйте пациента насчёт нормы углеводов за день.</p>
       </div>
 
-      <div th:if="${overBreadUnits}">
-        <p style="font-size: 16px; font-weight: bold; color: red;">Внимание! Обнаружено большое количество съеденных углеводов за один приём пищи, проконсультируйте пациента насчёт количества углеводов за 1 приём пищи.</p>
+      <div  class="alert alert-danger" style="width: 80%;height: 100px;text-align: center; margin: 10px auto;" th:if="${overBreadUnits}">
+        <p >Внимание! Обнаружено большое количество съеденных углеводов за один приём пищи, проконсультируйте пациента насчёт количества углеводов за 1 приём пищи.</p>
       </div>
 
     </div>
@@ -90,19 +321,25 @@
 
 </div>
 
-<table class="table">
-  <thead class="thead-dark">
+<table>
+  <thead>
   <tr>
-    <th scope="col">Продукт</th>
-    <th scope="col">Граммы</th>
-    <th scope="col">Дата и время </th>
-    <!-- Добавьте другие заголовки для показателей -->
+    <th>Продукт</th>
+    <th>Граммы</th>
+    <th>Тип углеводов</th>
+    <th>Хлебные единицы</th>
+    <th>Угелводы</th>
+    <th>Дата и время </th>
+
   </tr>
   </thead>
   <tbody>
-  <tr th:each="nutrition : ${nutritionList}">
+  <tr th:each="nutrition : ${nutritionList}" th:class="${nutrition.carbohydrateType == 'Простой' ? 'red-row' : 'default-row'}">
     <td th:text="${nutrition.product.name}"></td>
     <td th:text="${nutrition.grams}"></td>
+    <td th:text="${nutrition.carbohydrateType}"></td>
+    <td th:text="${nutrition.breadUnits}"></td>
+    <td th:text="${nutrition.carbohydrates}"></td>
     <td th:text="${nutrition.consumptionDateTime.format(dateTimeFormatter)}"></td>
     <!-- Добавьте другие ячейки для показателей -->
   </tr>

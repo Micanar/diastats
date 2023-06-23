@@ -5,6 +5,10 @@
   <title>Analysis Form</title>
   <!-- Подключение необходимых стилей и скриптов -->
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <div id="script" th:insert="fragments/boots :: sc"></div>
+  <div id="q" th:insert="fragments/boots :: trap"></div>
+  <div id="w" th:insert="fragments/boots :: sc2"></div>
+  <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
   <script th:src="@{/js/bootstrap.min.js}"></script>
 </head>
 <body>

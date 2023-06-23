@@ -33,10 +33,7 @@ public class RoleController {
 
     @PostMapping("/save")
     public String saveUserRole(@ModelAttribute("user") User user, @RequestParam(required = false) Boolean updatePassword, @RequestParam(required = false) Boolean updateActive) {
-        // Получите существующего пользователя из базы данных
         User existingUser = userRepo.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + user.getId()));
-
-        // Обновите только необходимые поля
         existingUser.setRoles(user.getRoles());
         if (existingUser.getRoles().contains(Role.ADMIN) || existingUser.getRoles().contains(Role.DOCTOR)) {
             existingUser.setDoctor(null);

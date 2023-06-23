@@ -5,7 +5,7 @@
   <title>Set Doctor</title>
 </head>
 <div id="w" th:insert="fragments/boots :: sc2"></div>
-<div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+<div id="tagWithInsertAttribute" th:insert="fragments/adminHeader :: adminHeader"></div>
 <body>
 <h2>Назначить доктора</h2>
 <form th:action="@{/role/save-doctor}" method="post">

@@ -1,6 +1,7 @@
 package com.micana.diastats.domain;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Created by rajeevkumarsingh on 24/07/17.
@@ -13,6 +14,8 @@ public class ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
 
     private String rerecipientt;
 
@@ -31,6 +34,14 @@ public class ChatMessage {
 
     public MessageType getType() {
         return type;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public void setType(MessageType type) {

@@ -8,23 +8,138 @@
     <div id="q" th:insert="fragments/boots :: trap"></div>
     <div id="w" th:insert="fragments/boots :: sc2"></div>
     <div id="tagWithInsertAttribute" th:insert="fragments/header :: targetFragmentToIncludeInOurPage"></div>
+<style>
+  body {
+    background: url(https://html5book.ru/wp-content/uploads/2015/07/background39.png);
+  }
+  h1 {
+    font-family:'American Typewriter', 'Rockwell Extra Bold', 'Book Antiqua', Georgia, serif;
+    font-size:4em;
+  }
 
+  /**
+  * Components
+  */
+  table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 14px;
+    border-radius: 10px;
+    border-spacing: 0;
+    text-align: center;
+    width: 100%;
+
+
+  }
+  th {
+    background: rgba(167, 255, 195, 0.8);
+    color: #000000;
+    padding: 10px 20px;
+  }
+  th, td {
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    border-color: white;
+  }
+  th:first-child, td:first-child {
+    text-align: left;
+  }
+  th:first-child {
+    border-top-left-radius: 10px;
+  }
+  th:last-child {
+    border-top-right-radius: 10px;
+    border-right: none;
+  }
+  td {
+    padding: 10px 20px;
+
+  }
+  tr:last-child td:first-child {
+    border-radius: 0 0 0 10px;
+  }
+  tr:last-child td:last-child {
+    border-radius: 0 0 10px 0;
+  }
+  tr td:last-child {
+    border-right: none;
+  }
+
+  .red-row {
+    background-color: #e1a0b6;
+    color: white;
+  }
+
+  .blue-row {
+    background-color: #aea0e9;
+    color: white;
+  }
+
+  .default-row {
+    background-color: #aed3c2; /* Можно изменить на другой цвет по умолчанию */
+    color: black;
+  }
+  .counter {
+    margin-bottom:1rem;
+    border-bottom:.1875em dashed #d2d6dd;
+  }
+
+  .tagline {
+    font-size:1.125em;
+    margin:2rem 1.5rem;
+  }
+
+  .calories {
+    color:#8b919b;
+    font-size:.875em;
+  }
+
+  .splash {
+    position: relative;
+    height:100vh;
+    max-width:30em;
+    text-align:center;
+  }
+
+  .splash {
+    box-sizing:border-box;
+    max-width:30em;
+    margin:0 auto;
+    padding:1.5em;
+  }
+
+
+  /**
+  * Header animation
+  */
+  .counter {
+    position:relative;
+  }
+
+  .counter h1 {
+    position:relative;
+    text-align:center;
+    margin:0;
+    line-height: .625;
+    z-index:2;
+    transform-origin: bottom center;
+  }
+</style>
   </head>
   <body>
   <h1>Все продукты</h1>
   <h5>Данные представлены на 100 грамм продукта</h5>
-  <table class="table">
-    <thead class="thead-dark">
+  <table>
+    <thead>
     <tr>
-      <th scope="col">Наименование продукта</th>
-      <th scope="col">Белки</th>
-      <th scope="col">Жиры</th>
-      <th scope="col">Углеводы</th>
-      <th scope="col">Хлебные единицы</th>
-      <th scope="col">Тип углеводов</th>
+      <th>Наименование продукта</th>
+      <th>Белки</th>
+      <th>Жиры</th>
+      <th >Углеводы</th>
+      <th >Хлебные единицы</th>
+      <th >Тип углеводов</th>
     </tr>
     </thead>
-    <tr th:each="pfc : ${pfcList}">
+    <tr th:each="pfc : ${pfcList}" th:class="${pfc.carbohydrateType == 'Простой' ? 'red-row' : 'default-row'}">
       <td th:text="${pfc.name}"></td>
       <td th:text="${pfc.proteins*100}"></td>
       <td th:text="${pfc.fats*100}"></td>

@@ -16,6 +16,8 @@ public class Blood_sugar {
 
     private double sugar;
 
+    private String comment;
+
     LocalDateTime dateTime;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -25,13 +27,20 @@ public class Blood_sugar {
     public Blood_sugar() {
     }
 
-    public Blood_sugar(double sugar, LocalDateTime dateTime,User user) {
+    public Blood_sugar(double sugar, LocalDateTime dateTime,String comment,User user) {
         this.patient = user;
         this.sugar = sugar;
+        this.comment=comment;
         this.dateTime=dateTime;
     }
 
+    public String getComment() {
+        return comment;
+    }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getPatientName(){
         return patient!=null ? patient.getUsername() : "<none>";
