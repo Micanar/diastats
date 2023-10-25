@@ -225,6 +225,7 @@ public class MainController {
             String formattedAverage = String.format("%.1f", averageSugarFirstDay);
 
 
+
 // Добавляем округленное значение в модель
 
 
